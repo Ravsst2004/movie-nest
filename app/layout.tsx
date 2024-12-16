@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import AppSidebar from "@/components/sidebar/app-sidebar";
+import { Providers } from "@/components/redux-provider";
 
 export const metadata: Metadata = {
   title: "Movie Nest",
@@ -17,15 +18,17 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`font-publicSans antialiased`}>
-        <section>
-          <SidebarProvider>
-            <AppSidebar />
-            <main className="w-full">
-              <SidebarTrigger />
-              {children}
-            </main>
-          </SidebarProvider>
-        </section>
+        <Providers>
+          <section>
+            <SidebarProvider>
+              <AppSidebar />
+              <main className="w-full">
+                <SidebarTrigger />
+                {children}
+              </main>
+            </SidebarProvider>
+          </section>
+        </Providers>
       </body>
     </html>
   );
