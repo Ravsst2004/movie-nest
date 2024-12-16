@@ -1,6 +1,5 @@
 import React from "react";
 import Profile from "../profile";
-import HamburgerMenu from "./hamburger-menu";
 
 const Navbar = () => {
   return (
@@ -15,9 +14,7 @@ const Navbar = () => {
           </div>
 
           {/* Hamburger Menu */}
-          <div className="md:hidden">
-            <HamburgerMenu />
-          </div>
+          <div className="md:hidden"></div>
         </div>
       </div>
     </nav>

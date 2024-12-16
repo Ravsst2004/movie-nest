@@ -17,15 +17,15 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`font-publicSans antialiased`}>
-        <main className="min-h-screen">
+        <section>
           <SidebarProvider>
             <AppSidebar />
-            <main>
+            <main className="w-full">
               <SidebarTrigger />
               {children}
             </main>
           </SidebarProvider>
-        </main>
+        </section>
       </body>
     </html>
   );
