@@ -7,16 +7,19 @@ export const CATEGORIES = [
   {
     id: 1,
     name: "Popular",
+    apiName: "popular",
     icon: <BsFilm />,
   },
   {
     id: 2,
     name: "Top Rated",
+    apiName: "top_rated",
     icon: <FaRegStar />,
   },
   {
     id: 3,
     name: "Upcoming",
+    apiName: "upcoming",
     icon: <MdOutlineMovie />,
   },
 ];

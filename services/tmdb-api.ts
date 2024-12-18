@@ -13,7 +13,13 @@ export const tmdbApi = createApi({
   }),
   endpoints: (builder) => ({
     getMovies: builder.query({
-      query: ({ page }) => `/movie/popular?page=${page}&api_key=${tmdbApiKey}`,
+      query: ({ page, category }) => {
+        if (category) {
+          return `/movie/${category}?page=${page}&api_key=${tmdbApiKey}`;
+        }
+
+        return `/movie/popular?page=${page}&api_key=${tmdbApiKey}`;
+      },
     }),
   }),
 });

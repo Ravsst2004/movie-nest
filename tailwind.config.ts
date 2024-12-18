@@ -10,7 +10,7 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        publicSans: ["Public Sans", "sans-serif"],
+        poppins: ["Poppins", "sans-serif"],
       },
       colors: {
         greenPrime: "#00dc82",

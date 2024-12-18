@@ -13,12 +13,14 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "./ui/sidebar";
-import Link from "next/link";
 import { CATEGORIES } from "@/data/sidebar-data";
 import Line from "./ui/line";
+import { useDispatch } from "react-redux";
+import { setCategory } from "@/store/movie-slice";
 
 const AppSidebar = () => {
   const { state } = useSidebar();
+  const dispatch = useDispatch();
 
   return (
     <>
@@ -27,7 +29,7 @@ const AppSidebar = () => {
         collapsible="icon"
       >
         <SidebarHeader className={state === "collapsed" ? "hidden" : ""}>
-          <h1 className="text-3xl font-extrabold text-center">Movie Nest</h1>
+          <h1 className="text-3xl font-bold text-center">Movie Nest</h1>
           <Line />
         </SidebarHeader>
         <SidebarContent>
@@ -37,18 +39,18 @@ const AppSidebar = () => {
             </SidebarGroupLabel>
             <SidebarMenu>
               {CATEGORIES.map((category) => (
-                <SidebarMenuItem
-                  key={category.id}
-                  className="flex items-center"
-                >
-                  <SidebarMenuButton asChild>
-                    <Link
-                      href={"/"}
-                      className="text-xl font-medium flex space-x-2"
+                <SidebarMenuItem key={category.id}>
+                  <SidebarMenuButton
+                    asChild
+                    className="hover:bg-gray-200"
+                  >
+                    <div
+                      onClick={() => dispatch(setCategory(category.apiName))}
+                      className="text-xl flex space-x-2 cursor-pointer"
                     >
                       <span className="w-fit h-fit">{category.icon}</span>
                       <span>{category.name}</span>
-                    </Link>
+                    </div>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}

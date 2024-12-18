@@ -1,9 +1,11 @@
 import { tmdbApi } from "@/services/tmdb-api";
 import { configureStore } from "@reduxjs/toolkit";
+import { movieSlice } from "./movie-slice";
 
 export const store = configureStore({
   reducer: {
     [tmdbApi.reducerPath]: tmdbApi.reducer,
+    movie: movieSlice.reducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(tmdbApi.middleware),

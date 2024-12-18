@@ -12,21 +12,25 @@ const MovieCard = ({ image, title, voteAverage }: MovieCardProps) => {
   return (
     <Link
       href={`/movie/${title}`}
+      passHref
       className="flex flex-col justify-center items-center"
     >
-      <Image
-        src={image}
-        alt={title}
-        width={300}
-        height={450}
-        priority
-        className="w-full h-[300px] object-cover rounded-lg"
-      />
+      <div className="relative">
+        <Image
+          src={image}
+          alt={title}
+          width={300}
+          height={450}
+          priority
+          className="w-full h-[300px] object-cover rounded-lg"
+        />
+      </div>
 
       <h1 className="text-center font-semibold pt-2 z-10 relative">{title}</h1>
+
       <Rating
         name="half-rating-read"
-        defaultValue={voteAverage / 2}
+        value={voteAverage / 2}
         precision={0.5}
         readOnly
         sx={{ fontSize: "1.2rem" }}
