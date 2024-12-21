@@ -13,7 +13,7 @@ const MovieCard = ({ image, title, voteAverage }: MovieCardProps) => {
     <Link
       href={`/movie/${title}`}
       passHref
-      className="flex flex-col justify-center items-center"
+      className="flex flex-col justify-center items-center pb-4"
     >
       <div className="relative w-fit">
         <Image
@@ -22,7 +22,7 @@ const MovieCard = ({ image, title, voteAverage }: MovieCardProps) => {
           width={300}
           height={450}
           priority
-          className="w-full h-[350px] object-cover rounded-lg"
+          className="w-full h-[300px] object-cover rounded-lg"
         />
       </div>
 

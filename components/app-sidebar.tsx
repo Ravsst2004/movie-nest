@@ -68,7 +68,7 @@ const AppSidebar = () => {
           </SidebarGroup> */}
         </SidebarContent>
         <SidebarFooter>
-          <SidebarMenuButton>See all</SidebarMenuButton>
+          <SidebarMenuButton>Profile</SidebarMenuButton>
         </SidebarFooter>
       </Sidebar>
     </>

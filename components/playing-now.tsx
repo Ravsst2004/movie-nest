@@ -8,6 +8,7 @@ import Image from "next/image";
 import { MovieResultType } from "@/types/movies";
 import Link from "next/link";
 import { motion } from "motion/react";
+import { fadeIn } from "@/motion/fade-variants";
 
 const PlayingNow = () => {
   const { data: nowPlaying } = useGetMovieNowPlayingQuery({});
@@ -39,15 +40,33 @@ const PlayingNow = () => {
                     priority
                   />
                   <div className="absolute bottom-0 left-0 p-4 lg:p-8 text-white z-10 space-y-2">
-                    <motion.h1 className="text-xl md:text-3xl lg:text-8xl font-bold">
+                    <motion.h1
+                      variants={fadeIn}
+                      initial="hidden"
+                      animate="visible"
+                      transition={{ duration: 0.7 }}
+                      className="text-xl md:text-3xl lg:text-8xl font-bold"
+                    >
                       {movie.title}
                     </motion.h1>
-                    <p className="text-xs md:text-sm lg:text-xl md:max-w-[70%]">
+                    <motion.p
+                      variants={fadeIn}
+                      initial="hidden"
+                      animate="visible"
+                      transition={{ duration: 0.7, delay: 0.3 }}
+                      className="text-xs md:text-sm lg:text-xl md:max-w-[70%]"
+                    >
                       {movie.overview}
-                    </p>
-                    <h3 className="text-xs md:text-sm lg:text-xl bg-white text-black px-2 py-1 rounded-md w-fit">
+                    </motion.p>
+                    <motion.h3
+                      variants={fadeIn}
+                      initial="hidden"
+                      animate="visible"
+                      transition={{ duration: 0.7, delay: 0.5 }}
+                      className="text-xs md:text-sm bg-white text-black px-2 py-1 rounded-md w-fit"
+                    >
                       In Theaters Now
-                    </h3>
+                    </motion.h3>
                   </div>
                 </div>
               </Link>
