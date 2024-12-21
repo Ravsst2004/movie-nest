@@ -17,6 +17,7 @@ import { CATEGORIES } from "@/data/sidebar-data";
 import Line from "./ui/line";
 import { useDispatch } from "react-redux";
 import { setCategory } from "@/store/movie-slice";
+import Link from "next/link";
 
 const AppSidebar = () => {
   const { state } = useSidebar();
@@ -29,7 +30,12 @@ const AppSidebar = () => {
         collapsible="icon"
       >
         <SidebarHeader className={state === "collapsed" ? "hidden" : ""}>
-          <h1 className="text-3xl font-bold text-center">Movie Nest</h1>
+          <Link
+            href={"/"}
+            className="text-3xl font-bold text-center"
+          >
+            Movie Nest
+          </Link>
           <Line />
         </SidebarHeader>
         <SidebarContent>
