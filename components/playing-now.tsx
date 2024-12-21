@@ -12,7 +12,6 @@ import { fadeIn } from "@/motion/fade-variants";
 
 const PlayingNow = () => {
   const { data: nowPlaying } = useGetMovieNowPlayingQuery({});
-  console.log(nowPlaying);
 
   return (
     <>
@@ -45,7 +44,7 @@ const PlayingNow = () => {
                       initial="hidden"
                       animate="visible"
                       transition={{ duration: 0.7 }}
-                      className="text-xl md:text-3xl lg:text-8xl font-bold"
+                      className="text-xl md:text-3xl lg:text-5xl xl:text-7xl font-bold"
                     >
                       {movie.title}
                     </motion.h1>
@@ -54,7 +53,7 @@ const PlayingNow = () => {
                       initial="hidden"
                       animate="visible"
                       transition={{ duration: 0.7, delay: 0.3 }}
-                      className="text-xs md:text-sm lg:text-xl md:max-w-[70%]"
+                      className="text-xs md:text-sm lg:text-base xl:text-lg md:max-w-[70%]"
                     >
                       {movie.overview}
                     </motion.p>

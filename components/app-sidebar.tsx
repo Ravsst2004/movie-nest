@@ -68,7 +68,19 @@ const AppSidebar = () => {
           </SidebarGroup> */}
         </SidebarContent>
         <SidebarFooter>
-          <SidebarMenuButton>Profile</SidebarMenuButton>
+          <SidebarMenuButton className="h-fit">
+            <div className="flex items-center gap-2">
+              <img
+                src="https://placehold.co/400x400"
+                alt="logo"
+                className="rounded-full w-10 h-10"
+              />
+              <div>
+                <h1 className="font-semibold">Name</h1>
+                <p>email</p>
+              </div>
+            </div>
+          </SidebarMenuButton>
         </SidebarFooter>
       </Sidebar>
     </>
