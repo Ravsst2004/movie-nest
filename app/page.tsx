@@ -2,7 +2,7 @@
 
 import { useMemo } from "react";
 import MovieCard from "@/components/movie-card";
-import { useGetMoviesQuery } from "@/services/tmdb-api";
+import { useGetMovieGenresQuery, useGetMoviesQuery } from "@/services/tmdb-api";
 import { RootState } from "@/store/store";
 import { MovieResultType } from "@/types/movies";
 import { useDispatch, useSelector } from "react-redux";
@@ -19,17 +19,20 @@ import { motion } from "motion/react";
 import { setPage, setSearch } from "@/store/movie-slice";
 import { Input } from "@/components/ui/input";
 import Loading from "./loading";
+import { GenreType } from "@/types/genres";
 
 const Home = () => {
-  const { category, page, searchTerm } = useSelector(
+  const dispatch = useDispatch();
+  const { category, genreId, page, searchTerm } = useSelector(
     (state: RootState) => state.movie
   );
   const { data: movies, isLoading } = useGetMoviesQuery({
     page,
     category,
+    genreId,
     searchTerm,
   });
-  const dispatch = useDispatch();
+  const { data: genres } = useGetMovieGenresQuery({});
 
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.value === "") return dispatch(setSearch(""));
@@ -39,6 +42,12 @@ const Home = () => {
       dispatch(setSearch(e.target.value));
     }, 300);
   };
+
+  const ListTitle = useMemo(() => {
+    if (!movies || !genreId) return category.split("_").join(" ");
+    return genres?.genres?.find((genre: GenreType) => genre.id === genreId)
+      ?.name;
+  }, [movies, genreId, category, genres?.genres]);
 
   const movieItems = useMemo(() => {
     if (!movies) return <h1>No Movies Found</h1>;
@@ -68,8 +77,11 @@ const Home = () => {
 
       <article className="mt-10 space-y-2">
         <div className="flex flex-wrap justify-between items-center">
-          <h1 className="uppercase text-3xl font-bold">
-            {category.split("_").join(" ") || "Popular Movies"}
+          <h1
+            id={`${ListTitle}`}
+            className="uppercase text-3xl font-bold"
+          >
+            {ListTitle}
           </h1>
           <Input
             type="search"

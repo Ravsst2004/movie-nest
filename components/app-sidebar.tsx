@@ -13,15 +13,31 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "./ui/sidebar";
-import { CATEGORIES } from "@/data/sidebar-data";
+import { CATEGORIES, GENRESICON } from "@/data/sidebar-data";
 import Line from "./ui/line";
 import { useDispatch } from "react-redux";
-import { setCategory } from "@/store/movie-slice";
+import { setCategory, setGenreId } from "@/store/movie-slice";
 import Link from "next/link";
+import { useGetMovieGenresQuery } from "@/services/tmdb-api";
+import { GenreType } from "@/types/genres";
+
+type GenreWithIconsType = {
+  id: number;
+  name: string;
+  icon: React.ReactNode;
+};
 
 const AppSidebar = () => {
   const { state } = useSidebar();
   const dispatch = useDispatch();
+  const { data: genres } = useGetMovieGenresQuery({});
+
+  const genresWithIcons: GenreWithIconsType[] = genres?.genres?.map(
+    (genre: GenreType, index: number) => ({
+      ...genre,
+      icon: GENRESICON[index]?.icon || null,
+    })
+  );
 
   return (
     <>
@@ -50,22 +66,47 @@ const AppSidebar = () => {
                     asChild
                     className="hover:bg-gray-200"
                   >
-                    <div
+                    <Link
+                      href={`#${category.apiName}`}
                       onClick={() => dispatch(setCategory(category.apiName))}
                       className="text-xl flex space-x-2 cursor-pointer"
                     >
                       <span className="w-fit h-fit">{category.icon}</span>
                       <span>{category.name}</span>
-                    </div>
+                    </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}
             </SidebarMenu>
           </SidebarGroup>
-          <p className="h-[1px] w-full bg-gray-200"></p>
-          {/* <SidebarGroup>
-            <SidebarGroupLabel className="text-base">Genres</SidebarGroupLabel>
-          </SidebarGroup> */}
+          <SidebarGroup>
+            <SidebarGroupLabel className="text-base font-medium text-gray-500">
+              Genres
+            </SidebarGroupLabel>
+            <SidebarMenu>
+              {genres &&
+                genresWithIcons.map((genre: GenreWithIconsType) => {
+                  console.log(genre);
+                  return (
+                    <SidebarMenuItem key={genre.id}>
+                      <SidebarMenuButton
+                        asChild
+                        className="hover:bg-gray-200"
+                      >
+                        <Link
+                          href={`#${genre.name}`}
+                          onClick={() => dispatch(setGenreId(genre.id))}
+                          className="text-xl flex space-x-2 cursor-pointer"
+                        >
+                          <span className="w-fit h-fit">{genre.icon}</span>
+                          <span>{genre.name}</span>
+                        </Link>
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
+                  );
+                })}
+            </SidebarMenu>
+          </SidebarGroup>
         </SidebarContent>
         <SidebarFooter>
           <SidebarMenuButton className="h-fit">

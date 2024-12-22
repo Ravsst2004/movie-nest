@@ -3,12 +3,14 @@ import type { PayloadAction } from "@reduxjs/toolkit";
 
 export interface MovieState {
   category: string;
+  genreId: number | null;
   page: number;
   searchTerm: string;
 }
 
 const initialState: MovieState = {
-  category: "popular",
+  category: "",
+  genreId: null,
   page: 1,
   searchTerm: "",
 };
@@ -17,8 +19,12 @@ export const movieSlice = createSlice({
   name: "movie",
   initialState,
   reducers: {
+    setGenreId: (state, action: PayloadAction<number | null>) => {
+      state.genreId = action.payload;
+    },
     setCategory: (state, action: PayloadAction<string>) => {
       state.category = action.payload;
+      state.genreId = null;
     },
     setPage: (state, action: PayloadAction<number>) => {
       state.page = action.payload;
@@ -29,6 +35,7 @@ export const movieSlice = createSlice({
   },
 });
 
-export const { setCategory, setPage, setSearch } = movieSlice.actions;
+export const { setCategory, setGenreId, setPage, setSearch } =
+  movieSlice.actions;
 
 export default movieSlice.reducer;

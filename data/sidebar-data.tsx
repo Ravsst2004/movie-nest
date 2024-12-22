@@ -1,7 +1,27 @@
-import { BsFilm } from "react-icons/bs";
-import { FaRegStar } from "react-icons/fa";
-import { MdOutlineMovie } from "react-icons/md";
-// import { GiPunchBlast } from "react-icons/gi";
+import { BsCameraReels, BsFilm } from "react-icons/bs";
+import {
+  FaRegCompass,
+  FaRegHeart,
+  FaRegStar,
+  FaTheaterMasks,
+  FaTv,
+} from "react-icons/fa";
+import {
+  MdFamilyRestroom,
+  MdOutlineMovie,
+  MdOutlineScience,
+} from "react-icons/md";
+import {
+  GiDoubleDragon,
+  GiMusicalNotes,
+  GiPistolGun,
+  GiPunchBlast,
+  GiSandsOfTime,
+} from "react-icons/gi";
+import { SiAlby } from "react-icons/si";
+import { PiDetectiveBold, PiMaskHappy } from "react-icons/pi";
+import { RiCactusLine, RiKnifeBloodLine, RiSwordLine } from "react-icons/ri";
+import { IoSkullOutline } from "react-icons/io5";
 
 export const CATEGORIES = [
   {
@@ -24,14 +44,24 @@ export const CATEGORIES = [
   },
 ];
 
-// export const GENRES = [
-//   {
-//     id: 1,
-//     name: "Action",
-//     slug: "action",
-//     icon: <GiPunchBlast />,
-//   },
-//   {
-//     id: 2,
-//   },
-// ];
+export const GENRESICON = [
+  { icon: <GiPunchBlast /> },
+  { icon: <FaRegCompass /> },
+  { icon: <SiAlby /> },
+  { icon: <PiMaskHappy /> },
+  { icon: <GiPistolGun /> },
+  { icon: <BsCameraReels /> },
+  { icon: <FaTheaterMasks /> },
+  { icon: <MdFamilyRestroom /> },
+  { icon: <GiDoubleDragon /> },
+  { icon: <GiSandsOfTime /> },
+  { icon: <RiKnifeBloodLine /> },
+  { icon: <GiMusicalNotes /> },
+  { icon: <PiDetectiveBold /> },
+  { icon: <FaRegHeart /> },
+  { icon: <MdOutlineScience /> },
+  { icon: <FaTv /> },
+  { icon: <IoSkullOutline /> },
+  { icon: <RiSwordLine /> },
+  { icon: <RiCactusLine /> },
+];
