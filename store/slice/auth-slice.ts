@@ -41,6 +41,9 @@ export const authSlice = createSlice({
   initialState,
   reducers: {
     logout: (state) => {
+      localStorage.removeItem("requestToken");
+      sessionStorage.removeItem("sessionId");
+
       state.requestToken = null;
       state.sessionId = null;
     },
@@ -56,30 +59,14 @@ export const authSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      .addCase(fetchRequestToken.pending, (state) => {
-        state.loading = true;
-        state.error = null;
-      })
       .addCase(fetchRequestToken.fulfilled, (state, action) => {
         state.loading = false;
         state.requestToken = action.payload.request_token;
       })
-      .addCase(fetchRequestToken.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.payload;
-      })
 
-      .addCase(createSession.pending, (state) => {
-        state.loading = true;
-        state.error = null;
-      })
       .addCase(createSession.fulfilled, (state, action) => {
         state.loading = false;
         state.sessionId = action.payload.session_id;
-      })
-      .addCase(createSession.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.payload;
       });
   },
 });
