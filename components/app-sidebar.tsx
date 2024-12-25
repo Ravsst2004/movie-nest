@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   Sidebar,
   SidebarContent,
@@ -23,6 +23,8 @@ import { GenreType } from "@/types/genres";
 import { Button } from "./ui/button";
 import { AppDispatch, RootState } from "@/store/store";
 import { fetchRequestToken } from "@/store/thunk/auth-thunk";
+import { setUserData } from "@/store/slice/auth-slice";
+import Image from "next/image";
 
 type GenreWithIconsType = {
   id: number;
@@ -34,49 +36,44 @@ const AppSidebar = () => {
   const { state } = useSidebar();
   const dispatch = useDispatch<AppDispatch>();
   const { data: genres } = useGetMovieGenresQuery({});
-  const { requestToken } = useSelector((state: RootState) => state.auth);
+  const { requestToken, user, isAuthenticated } = useSelector(
+    (state: RootState) => state.auth
+  );
+  console.log("user", user);
 
-  // const handleRequestToken = async () => {
-  //   try {
-  //     if (requestToken) {
-  //       dispatch(createSession(requestToken))
-  //         .unwrap()
-  //         .then((session) => {
-  //           console.log(session);
-  //           sessionStorage.setItem("sessionId", session.session_id);
-  //         });
-  //     }
-  //   } catch (error) {
-  //     console.error("Failed to create session:", error);
-  //   }
-  // };
+  useEffect(() => {
+    const sessionId = sessionStorage.getItem("sessionId");
 
-  // useEffect(() => {
-  //   handleRequestToken();
-  // }, [dispatch, requestToken]);
+    if (!sessionId) return;
+
+    (async () => {
+      try {
+        const res = await fetch(
+          `https://api.themoviedb.org/3/account?session_id=${sessionId}&api_key=${process.env.NEXT_PUBLIC_TMDB_API_KEY}`
+        );
+
+        if (!res.ok) throw new Error("Failed to fetch user data");
+
+        const userData = await res.json();
+        dispatch(setUserData(userData));
+      } catch (error) {
+        console.error("Failed to fetch user data:", error);
+      }
+    })();
+  }, [dispatch]);
 
   const handleLogin = async () => {
     try {
-      await dispatch(fetchRequestToken());
+      await dispatch(fetchRequestToken()).unwrap();
 
-      if (requestToken) {
-        localStorage.setItem("requestToken", requestToken);
-        window.location.href = `https://www.themoviedb.org/authenticate/${requestToken}?redirect_to=${window.location.origin}/profile/approved`;
-      }
+      if (!requestToken) return;
+
+      localStorage.setItem("requestToken", requestToken);
+      window.location.href = `https://www.themoviedb.org/authenticate/${requestToken}?redirect_to=${window.location.origin}/profile/approved`;
     } catch (error) {
       console.error("Failed to fetch request token:", error);
     }
   };
-
-  // const handleFetchRequestToken = () => {
-  //   dispatch(fetchRequestToken());
-  // };
-
-  // const handleCreateSession = () => {
-  //   if (requestToken) {
-  //     dispatch(createSession(requestToken));
-  //   }
-  // };
 
   const genresWithIcons: GenreWithIconsType[] = genres?.genres?.map(
     (genre: GenreType, index: number) => ({
@@ -84,8 +81,6 @@ const AppSidebar = () => {
       icon: GENRESICON[index]?.icon || null,
     })
   );
-
-  const isAuthenticated = false;
 
   return (
     <>
@@ -162,15 +157,14 @@ const AppSidebar = () => {
                 href="/profile"
                 className="flex items-center gap-2"
               >
-                <img
-                  src="https://placehold.co/400x400"
+                <Image
+                  src={`https://gravatar.com/avatar/${user?.avatar?.gravatar?.hash}`}
                   alt="logo"
+                  width={100}
+                  height={100}
                   className="rounded-full w-10 h-10"
                 />
-                <div>
-                  <h1 className="font-semibold">Name</h1>
-                  <p>email</p>
-                </div>
+                <h1 className="font-semibold">{user?.username}</h1>
               </Link>
             ) : (
               <Button

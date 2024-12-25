@@ -9,6 +9,7 @@ import { MovieResultType } from "@/types/movies";
 import Link from "next/link";
 import { motion } from "motion/react";
 import { fadeIn } from "@/motion/fade-variants";
+import Autoplay from "embla-carousel-autoplay";
 
 const PlayingNow = () => {
   const { data: nowPlaying } = useGetMovieNowPlayingQuery({});
@@ -20,6 +21,11 @@ const PlayingNow = () => {
           align: "start",
           loop: true,
         }}
+        plugins={[
+          Autoplay({
+            delay: 3000,
+          }),
+        ]}
       >
         <CarouselContent>
           {nowPlaying?.results.map((movie: MovieResultType) => (

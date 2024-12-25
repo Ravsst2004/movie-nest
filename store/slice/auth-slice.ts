@@ -1,11 +1,30 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { createSession, fetchRequestToken } from "../thunk/auth-thunk";
 
+type User = {
+  id: number;
+  name: string;
+  username: string;
+  avatar: {
+    gravatar: {
+      hash: string;
+    };
+    tmdb: {
+      avatar_path?: string | null;
+    };
+  };
+  iso_639_1: string;
+  iso_3166_1: string;
+  include_adult: boolean;
+};
+
 type AuthState = {
   requestToken: string | null;
   sessionId: string | null;
   loading: boolean;
   error: unknown | null;
+  isAuthenticated: boolean;
+  user: User | null;
 };
 
 const initialState: AuthState = {
@@ -13,6 +32,8 @@ const initialState: AuthState = {
   sessionId: null,
   loading: false,
   error: null,
+  isAuthenticated: false,
+  user: null,
 };
 
 export const authSlice = createSlice({
@@ -22,6 +43,15 @@ export const authSlice = createSlice({
     logout: (state) => {
       state.requestToken = null;
       state.sessionId = null;
+    },
+    setUserData: (state, action) => {
+      if (!action.payload) {
+        state.isAuthenticated = false;
+        state.user = null;
+      }
+
+      state.user = action.payload;
+      state.isAuthenticated = true;
     },
   },
   extraReducers: (builder) => {
@@ -54,5 +84,5 @@ export const authSlice = createSlice({
   },
 });
 
-export const { logout } = authSlice.actions;
+export const { logout, setUserData } = authSlice.actions;
 export default authSlice.reducer;
