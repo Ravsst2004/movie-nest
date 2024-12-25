@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import {
   Sidebar,
   SidebarContent,
@@ -25,6 +25,7 @@ import { AppDispatch, RootState } from "@/store/store";
 import { fetchRequestToken } from "@/store/thunk/auth-thunk";
 import { setUserData } from "@/store/slice/auth-slice";
 import Image from "next/image";
+import { usePathname } from "next/navigation";
 
 type GenreWithIconsType = {
   id: number;
@@ -33,13 +34,14 @@ type GenreWithIconsType = {
 };
 
 const AppSidebar = () => {
+  const pathname = usePathname();
+
   const { state } = useSidebar();
   const dispatch = useDispatch<AppDispatch>();
   const { data: genres } = useGetMovieGenresQuery({});
   const { requestToken, user, isAuthenticated } = useSelector(
     (state: RootState) => state.auth
   );
-  console.log("user", user);
 
   useEffect(() => {
     const sessionId = sessionStorage.getItem("sessionId");
@@ -82,6 +84,64 @@ const AppSidebar = () => {
     })
   );
 
+  const displayCategories = useMemo(() => {
+    return CATEGORIES.map((category) => {
+      let hrefLink;
+      if (pathname === "/") {
+        hrefLink = `#${category.apiName}`;
+      } else {
+        hrefLink = `/`;
+      }
+
+      return (
+        <SidebarMenuItem key={category.id}>
+          <SidebarMenuButton
+            asChild
+            className="hover:bg-gray-200"
+          >
+            <Link
+              href={hrefLink}
+              onClick={() => dispatch(setCategory(category.apiName))}
+              className="text-xl flex space-x-2 cursor-pointer"
+            >
+              <span className="w-fit h-fit">{category.icon}</span>
+              <span>{category.name}</span>
+            </Link>
+          </SidebarMenuButton>
+        </SidebarMenuItem>
+      );
+    });
+  }, [dispatch, pathname]);
+
+  const displayGenreIcon = useMemo(() => {
+    return genresWithIcons?.map((genre: GenreWithIconsType) => {
+      let hrefLink;
+      if (pathname === "/") {
+        hrefLink = `#${genre.name}`;
+      } else {
+        hrefLink = `/`;
+      }
+
+      return (
+        <SidebarMenuItem key={genre.id}>
+          <SidebarMenuButton
+            asChild
+            className="hover:bg-gray-200"
+          >
+            <Link
+              href={hrefLink}
+              onClick={() => dispatch(setGenreId(genre.id))}
+              className="text-xl flex space-x-2 cursor-pointer"
+            >
+              <span className="w-fit h-fit">{genre.icon}</span>
+              <span>{genre.name}</span>
+            </Link>
+          </SidebarMenuButton>
+        </SidebarMenuItem>
+      );
+    });
+  }, [dispatch, genresWithIcons, pathname]);
+
   return (
     <>
       <Sidebar
@@ -102,52 +162,13 @@ const AppSidebar = () => {
             <SidebarGroupLabel className="text-base font-medium text-gray-500">
               Categories
             </SidebarGroupLabel>
-            <SidebarMenu>
-              {CATEGORIES.map((category) => (
-                <SidebarMenuItem key={category.id}>
-                  <SidebarMenuButton
-                    asChild
-                    className="hover:bg-gray-200"
-                  >
-                    <Link
-                      href={`#${category.apiName}`}
-                      onClick={() => dispatch(setCategory(category.apiName))}
-                      className="text-xl flex space-x-2 cursor-pointer"
-                    >
-                      <span className="w-fit h-fit">{category.icon}</span>
-                      <span>{category.name}</span>
-                    </Link>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              ))}
-            </SidebarMenu>
+            <SidebarMenu>{displayCategories}</SidebarMenu>
           </SidebarGroup>
           <SidebarGroup>
             <SidebarGroupLabel className="text-base font-medium text-gray-500">
               Genres
             </SidebarGroupLabel>
-            <SidebarMenu>
-              {genres &&
-                genresWithIcons.map((genre: GenreWithIconsType) => {
-                  return (
-                    <SidebarMenuItem key={genre.id}>
-                      <SidebarMenuButton
-                        asChild
-                        className="hover:bg-gray-200"
-                      >
-                        <Link
-                          href={`#${genre.name}`}
-                          onClick={() => dispatch(setGenreId(genre.id))}
-                          className="text-xl flex space-x-2 cursor-pointer"
-                        >
-                          <span className="w-fit h-fit">{genre.icon}</span>
-                          <span>{genre.name}</span>
-                        </Link>
-                      </SidebarMenuButton>
-                    </SidebarMenuItem>
-                  );
-                })}
-            </SidebarMenu>
+            <SidebarMenu>{displayGenreIcon}</SidebarMenu>
           </SidebarGroup>
         </SidebarContent>
         <SidebarFooter>
