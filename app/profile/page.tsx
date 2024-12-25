@@ -18,6 +18,11 @@ const ProfilePage = () => {
     }
   }, [user, router]);
 
+  const handleLogout = () => {
+    dispatch(logout());
+    router.push("/");
+  };
+
   if (!user) {
     return null;
   }
@@ -28,7 +33,7 @@ const ProfilePage = () => {
       <h1>{user?.username}</h1>
       <Button
         variant={"destructive"}
-        onClick={() => dispatch(logout())}
+        onClick={handleLogout}
       >
         Logout
       </Button>

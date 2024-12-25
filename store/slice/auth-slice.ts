@@ -1,5 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { createSession, fetchRequestToken } from "../thunk/auth-thunk";
+import { redirect } from "next/navigation";
 
 type User = {
   id: number;
@@ -46,15 +47,17 @@ export const authSlice = createSlice({
 
       state.requestToken = null;
       state.sessionId = null;
+      state.isAuthenticated = false;
+      state.user = null;
     },
     setUserData: (state, action) => {
       if (!action.payload) {
         state.isAuthenticated = false;
         state.user = null;
+      } else {
+        state.user = action.payload;
+        state.isAuthenticated = true;
       }
-
-      state.user = action.payload;
-      state.isAuthenticated = true;
     },
   },
   extraReducers: (builder) => {
