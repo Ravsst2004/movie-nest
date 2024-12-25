@@ -16,12 +16,12 @@ import {
   PaginationPrevious,
 } from "@/components/ui/pagination";
 import { motion } from "motion/react";
-import { setPage, setSearch } from "@/store/movie-slice";
+import { setPage, setSearch } from "@/store/slice/movie-slice";
 import { Input } from "@/components/ui/input";
 import Loading from "./loading";
 import { GenreType } from "@/types/genres";
 
-const Home = () => {
+const HomePage = () => {
   const dispatch = useDispatch();
   const { category, genreId, page, searchTerm } = useSelector(
     (state: RootState) => state.movie
@@ -121,4 +121,4 @@ const Home = () => {
   );
 };
 
-export default Home;
+export default HomePage;

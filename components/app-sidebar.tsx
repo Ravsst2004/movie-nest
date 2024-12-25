@@ -15,11 +15,14 @@ import {
 } from "./ui/sidebar";
 import { CATEGORIES, GENRESICON } from "@/data/sidebar-data";
 import Line from "./ui/line";
-import { useDispatch } from "react-redux";
-import { setCategory, setGenreId } from "@/store/movie-slice";
+import { useDispatch, useSelector } from "react-redux";
+import { setCategory, setGenreId } from "@/store/slice/movie-slice";
 import Link from "next/link";
 import { useGetMovieGenresQuery } from "@/services/tmdb-api";
 import { GenreType } from "@/types/genres";
+import { Button } from "./ui/button";
+import { AppDispatch, RootState } from "@/store/store";
+import { fetchRequestToken } from "@/store/thunk/auth-thunk";
 
 type GenreWithIconsType = {
   id: number;
@@ -29,8 +32,51 @@ type GenreWithIconsType = {
 
 const AppSidebar = () => {
   const { state } = useSidebar();
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
   const { data: genres } = useGetMovieGenresQuery({});
+  const { requestToken } = useSelector((state: RootState) => state.auth);
+
+  // const handleRequestToken = async () => {
+  //   try {
+  //     if (requestToken) {
+  //       dispatch(createSession(requestToken))
+  //         .unwrap()
+  //         .then((session) => {
+  //           console.log(session);
+  //           sessionStorage.setItem("sessionId", session.session_id);
+  //         });
+  //     }
+  //   } catch (error) {
+  //     console.error("Failed to create session:", error);
+  //   }
+  // };
+
+  // useEffect(() => {
+  //   handleRequestToken();
+  // }, [dispatch, requestToken]);
+
+  const handleLogin = async () => {
+    try {
+      await dispatch(fetchRequestToken());
+
+      if (requestToken) {
+        localStorage.setItem("requestToken", requestToken);
+        window.location.href = `https://www.themoviedb.org/authenticate/${requestToken}?redirect_to=${window.location.origin}/profile/approved`;
+      }
+    } catch (error) {
+      console.error("Failed to fetch request token:", error);
+    }
+  };
+
+  // const handleFetchRequestToken = () => {
+  //   dispatch(fetchRequestToken());
+  // };
+
+  // const handleCreateSession = () => {
+  //   if (requestToken) {
+  //     dispatch(createSession(requestToken));
+  //   }
+  // };
 
   const genresWithIcons: GenreWithIconsType[] = genres?.genres?.map(
     (genre: GenreType, index: number) => ({
@@ -38,6 +84,8 @@ const AppSidebar = () => {
       icon: GENRESICON[index]?.icon || null,
     })
   );
+
+  const isAuthenticated = false;
 
   return (
     <>
@@ -86,7 +134,6 @@ const AppSidebar = () => {
             <SidebarMenu>
               {genres &&
                 genresWithIcons.map((genre: GenreWithIconsType) => {
-                  console.log(genre);
                   return (
                     <SidebarMenuItem key={genre.id}>
                       <SidebarMenuButton
@@ -110,17 +157,31 @@ const AppSidebar = () => {
         </SidebarContent>
         <SidebarFooter>
           <SidebarMenuButton className="h-fit">
-            <div className="flex items-center gap-2">
-              <img
-                src="https://placehold.co/400x400"
-                alt="logo"
-                className="rounded-full w-10 h-10"
-              />
-              <div>
-                <h1 className="font-semibold">Name</h1>
-                <p>email</p>
-              </div>
-            </div>
+            {isAuthenticated ? (
+              <Link
+                href="/profile"
+                className="flex items-center gap-2"
+              >
+                <img
+                  src="https://placehold.co/400x400"
+                  alt="logo"
+                  className="rounded-full w-10 h-10"
+                />
+                <div>
+                  <h1 className="font-semibold">Name</h1>
+                  <p>email</p>
+                </div>
+              </Link>
+            ) : (
+              <Button
+                asChild
+                onClick={handleLogin}
+                variant={"default"}
+                className="w-full"
+              >
+                <h1 className="flex items-center gap-2">Login</h1>
+              </Button>
+            )}
           </SidebarMenuButton>
         </SidebarFooter>
       </Sidebar>

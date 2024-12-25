@@ -3,7 +3,7 @@ import { Input } from "./ui/input";
 import { useGetMovieBySearchQuery } from "@/services/tmdb-api";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/store/store";
-import { setSearch } from "@/store/movie-slice";
+import { setSearch } from "@/store/slice/movie-slice";
 
 const SearchMovie = () => {
   const { searchTerm: search } = useSelector((state: RootState) => state.movie);
