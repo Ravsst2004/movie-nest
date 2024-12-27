@@ -13,6 +13,12 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "./ui/sidebar";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { CATEGORIES, GENRESICON } from "@/data/sidebar-data";
 import Line from "./ui/line";
 import { useDispatch, useSelector } from "react-redux";
@@ -20,12 +26,14 @@ import { setCategory, setGenreId } from "@/store/slice/movie-slice";
 import Link from "next/link";
 import { useGetMovieGenresQuery } from "@/services/tmdb-api";
 import { GenreType } from "@/types/genres";
-import { Button } from "./ui/button";
 import { AppDispatch, RootState } from "@/store/store";
 import { fetchRequestToken } from "@/store/thunk/auth-thunk";
 import { setUserData } from "@/store/slice/auth-slice";
-import Image from "next/image";
 import { usePathname } from "next/navigation";
+import Image from "next/image";
+import { Button } from "./ui/button";
+import ToggleMode from "./toggle-mode";
+import LogoutButton from "./logout-button";
 
 type GenreWithIconsType = {
   id: number;
@@ -97,12 +105,12 @@ const AppSidebar = () => {
         <SidebarMenuItem key={category.id}>
           <SidebarMenuButton
             asChild
-            className="hover:bg-gray-200"
+            className="hover:bg-gray-200 dark:hover:text-black"
           >
             <Link
               href={hrefLink}
               onClick={() => dispatch(setCategory(category.apiName))}
-              className="text-xl flex space-x-2 cursor-pointer"
+              className="text-xl flex space-x-2 cursor-pointer dark:active:text-white"
             >
               <span className="w-fit h-fit">{category.icon}</span>
               <span>{category.name}</span>
@@ -126,7 +134,7 @@ const AppSidebar = () => {
         <SidebarMenuItem key={genre.id}>
           <SidebarMenuButton
             asChild
-            className="hover:bg-gray-200"
+            className="hover:bg-gray-200 dark:hover:text-black"
           >
             <Link
               href={hrefLink}
@@ -172,32 +180,82 @@ const AppSidebar = () => {
           </SidebarGroup>
         </SidebarContent>
         <SidebarFooter>
-          <SidebarMenuButton className="h-fit">
-            {isAuthenticated ? (
-              <Link
-                href="/profile"
-                className="flex items-center gap-2"
-              >
-                <Image
-                  src={`https://gravatar.com/avatar/${user?.avatar?.gravatar?.hash}`}
-                  alt="logo"
-                  width={100}
-                  height={100}
-                  className="rounded-full w-10 h-10"
-                />
-                <h1 className="font-semibold">{user?.username}</h1>
-              </Link>
-            ) : (
-              <Button
-                asChild
-                onClick={handleLogin}
-                variant={"default"}
-                className="w-full"
-              >
-                <h1 className="flex items-center gap-2">Login</h1>
-              </Button>
-            )}
-          </SidebarMenuButton>
+          <SidebarMenu>
+            <SidebarMenuItem>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <SidebarMenuButton
+                    className={`${
+                      !isAuthenticated
+                        ? "flex justify-center items-center text-center bg-black text-white mb-1 dark:bg-white dark:text-black rounded border font-semibold"
+                        : "w-full h-fit"
+                    }`}
+                  >
+                    {isAuthenticated ? (
+                      <Link
+                        href="/profile"
+                        className="flex items-center gap-2 w-10 h-10"
+                      >
+                        <Image
+                          src={`https://gravatar.com/avatar/${user?.avatar?.gravatar?.hash}`}
+                          alt="logo"
+                          width={40}
+                          height={40}
+                          className={`rounded aspect-square w-10 h-10 object-cover ${
+                            state === "collapsed" ? "-ml-3 -mt-1" : ""
+                          }`}
+                        />
+                        <h1 className="font-semibold">{user?.username}</h1>
+                      </Link>
+                    ) : (
+                      <h1>Login</h1>
+                    )}
+                  </SidebarMenuButton>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent
+                  side="top"
+                  className="w-[--radix-popper-anchor-width]"
+                >
+                  <DropdownMenuItem>
+                    <span className="w-full">
+                      {isAuthenticated ? (
+                        <LogoutButton />
+                      ) : (
+                        <Button
+                          asChild
+                          onClick={handleLogin}
+                          variant={"default"}
+                        >
+                          <h1 className="flex items-center gap-2 w-full cursor-pointer">
+                            Login
+                          </h1>
+                        </Button>
+                      )}
+                    </span>
+                  </DropdownMenuItem>
+                  {isAuthenticated && (
+                    <DropdownMenuItem>
+                      <span className="w-full">
+                        <Button asChild>
+                          <Link
+                            href="/profile"
+                            className="flex items-center gap-2 w-full cursor-pointer"
+                          >
+                            Profile
+                          </Link>
+                        </Button>
+                      </span>
+                    </DropdownMenuItem>
+                  )}
+                  <DropdownMenuItem>
+                    <span className="w-full">
+                      <ToggleMode />
+                    </span>
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </SidebarMenuItem>
+          </SidebarMenu>
         </SidebarFooter>
       </Sidebar>
     </>

@@ -3,6 +3,7 @@ import "./globals.css";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import AppSidebar from "@/components/app-sidebar";
 import { Providers } from "@/components/redux-provider";
+import { ThemeProvider } from "@/components/theme-provider";
 
 export const metadata: Metadata = {
   title: "Movie Nest",
@@ -16,18 +17,28 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html
+      lang="en"
+      suppressHydrationWarning
+    >
       <body className={`font-poppins antialiased`}>
         <Providers>
-          <section>
-            <SidebarProvider>
-              <AppSidebar />
-              <main className="w-full">
-                <SidebarTrigger />
-                {children}
-              </main>
-            </SidebarProvider>
-          </section>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="light"
+            enableSystem
+            disableTransitionOnChange
+          >
+            <section>
+              <SidebarProvider>
+                <AppSidebar />
+                <main className="w-full">
+                  <SidebarTrigger />
+                  {children}
+                </main>
+              </SidebarProvider>
+            </section>
+          </ThemeProvider>
         </Providers>
       </body>
     </html>

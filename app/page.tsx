@@ -44,7 +44,7 @@ const HomePage = () => {
   };
 
   const ListTitle = useMemo(() => {
-    if (!movies || !genreId) return category.split("_").join(" ");
+    if (!movies || !genreId) return category.split("_").join(" ") || "POPULAR";
     return genres?.genres?.find((genre: GenreType) => genre.id === genreId)
       ?.name;
   }, [movies, genreId, category, genres?.genres]);
