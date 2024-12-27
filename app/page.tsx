@@ -52,21 +52,24 @@ const HomePage = () => {
   const movieItems = useMemo(() => {
     if (!movies) return <h1>No Movies Found</h1>;
 
-    return movies.results.map((movie: MovieResultType, index: number) => (
-      <motion.div
-        initial={{ opacity: 0, scale: 0.3 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 0.3, delay: 0.02 * index }}
-        key={movie.id}
-        className="overflow-hidden rounded-lg shadow-md"
-      >
-        <MovieCard
-          image={`https://image.tmdb.org/t/p/w500/${movie.poster_path}`}
-          title={movie.title}
-          voteAverage={movie.vote_average}
-        />
-      </motion.div>
-    ));
+    return movies.results.map((movie: MovieResultType, index: number) => {
+      return (
+        <motion.div
+          initial={{ opacity: 0, scale: 0.3 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.3, delay: 0.02 * index }}
+          key={movie.id}
+          className="overflow-hidden rounded-lg shadow-md"
+        >
+          <MovieCard
+            image={`https://image.tmdb.org/t/p/w500/${movie.poster_path}`}
+            title={movie.title}
+            id={movie.id}
+            voteAverage={movie.vote_average}
+          />
+        </motion.div>
+      );
+    });
   }, [movies]);
 
   if (isLoading) return <Loading />;

@@ -5,13 +5,17 @@ import Rating from "@mui/material/Rating";
 type MovieCardProps = {
   image: string;
   title: string;
+  id: number;
   voteAverage: number;
 };
 
-const MovieCard = ({ image, title, voteAverage }: MovieCardProps) => {
+const MovieCard = ({ image, title, id, voteAverage }: MovieCardProps) => {
+  const movieId = id.toString();
+  console.log(movieId);
+
   return (
     <Link
-      href={`/movie/${title}`}
+      href={`/movie/${movieId}`}
       passHref
       className="flex flex-col justify-center items-center pb-4"
     >
