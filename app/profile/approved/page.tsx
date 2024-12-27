@@ -1,6 +1,6 @@
 "use client";
 
-import { createSession } from "@/store/thunk/auth-thunk";
+import { createSession } from "@/lib/features/thunk/auth-thunk";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 

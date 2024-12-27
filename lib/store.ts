@@ -1,8 +1,8 @@
-import { authSlice } from "./slice/auth-slice";
 import { tmdbApi } from "@/services/tmdb-api";
 import { configureStore } from "@reduxjs/toolkit";
-import { movieSlice } from "./slice/movie-slice";
 import { authApi } from "@/services/auth-api";
+import { authSlice } from "@/lib/features/slice/auth-slice";
+import { movieSlice } from "@/lib/features/slice/movie-slice";
 
 export const store = configureStore({
   reducer: {

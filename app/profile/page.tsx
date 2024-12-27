@@ -1,7 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { logout } from "@/store/slice/auth-slice";
+import { logout } from "@/lib/features/slice/auth-slice";
 import { RootState } from "@/store/store";
 import { useRouter } from "next/navigation";
 import React, { useEffect } from "react";

@@ -3,7 +3,6 @@
 import { useMemo } from "react";
 import MovieCard from "@/components/movie-card";
 import { useGetMovieGenresQuery, useGetMoviesQuery } from "@/services/tmdb-api";
-import { RootState } from "@/store/store";
 import { MovieResultType } from "@/types/movies";
 import { useDispatch, useSelector } from "react-redux";
 import PlayingNow from "@/components/playing-now";
@@ -16,10 +15,11 @@ import {
   PaginationPrevious,
 } from "@/components/ui/pagination";
 import { motion } from "motion/react";
-import { setPage, setSearch } from "@/store/slice/movie-slice";
+import { setPage, setSearch } from "@/lib/features/slice/movie-slice";
 import { Input } from "@/components/ui/input";
 import Loading from "./loading";
 import { GenreType } from "@/types/genres";
+import { RootState } from "@/lib/store";
 
 const HomePage = () => {
   const dispatch = useDispatch();

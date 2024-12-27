@@ -22,13 +22,13 @@ import {
 import { CATEGORIES, GENRESICON } from "@/data/sidebar-data";
 import Line from "./ui/line";
 import { useDispatch, useSelector } from "react-redux";
-import { setCategory, setGenreId } from "@/store/slice/movie-slice";
+import { setCategory, setGenreId } from "@/lib/features/slice/movie-slice";
 import Link from "next/link";
 import { useGetMovieGenresQuery } from "@/services/tmdb-api";
 import { GenreType } from "@/types/genres";
-import { AppDispatch, RootState } from "@/store/store";
-import { fetchRequestToken } from "@/store/thunk/auth-thunk";
-import { setUserData } from "@/store/slice/auth-slice";
+import { AppDispatch, RootState } from "@/lib/store";
+import { fetchRequestToken } from "@/lib/features/thunk/auth-thunk";
+import { setUserData } from "@/lib/features/slice/auth-slice";
 import { usePathname } from "next/navigation";
 import Image from "next/image";
 import { Button } from "./ui/button";
