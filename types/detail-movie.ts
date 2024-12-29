@@ -3,6 +3,7 @@ import { GenreType } from "./genres";
 import { ProductionCompaniesType } from "./production-companies";
 import { ReviewsType } from "./reviews";
 import { Similiar } from "./similiar";
+import { SpokenLanguages } from "./spoken-languages";
 
 export type DetailMovieType = {
   adult: boolean;
@@ -30,11 +31,7 @@ export type DetailMovieType = {
   reviews: ReviewsType[];
   runtime: number;
   similiar: Similiar[];
-  spoken_languages: {
-    english_name: string;
-    iso_639_1: string;
-    name: string;
-  }[];
+  spoken_languages: SpokenLanguages[];
   status: string;
   tagline: string;
   title: string;

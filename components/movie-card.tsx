@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import Rating from "@mui/material/Rating";
+import { createSlug } from "@/lib/utils/create-slug";
 
 type MovieCardProps = {
   image: string;
@@ -10,12 +11,11 @@ type MovieCardProps = {
 };
 
 const MovieCard = ({ image, title, id, voteAverage }: MovieCardProps) => {
-  const movieId = id.toString();
-  console.log(movieId);
+  const slug = `${createSlug(title).toLowerCase()}-${id}`;
 
   return (
     <Link
-      href={`/movie/${movieId}`}
+      href={`/movie/${slug}`}
       passHref
       className="flex flex-col justify-center items-center pb-4"
     >
