@@ -15,9 +15,9 @@ import { CrewType } from "@/types/crew";
 
 const DrawerInformation = ({ movie }: { movie: DetailMovieType }) => {
   return (
-    <>
+    <div className="flex items-center flex-wrap gap-2">
       <Drawer>
-        <DrawerTrigger className={`${buttonVariants({ variant: "outline" })}`}>
+        <DrawerTrigger className={`${buttonVariants({ variant: "default" })}`}>
           Cast
         </DrawerTrigger>
         <DrawerContent>
@@ -36,7 +36,7 @@ const DrawerInformation = ({ movie }: { movie: DetailMovieType }) => {
       </Drawer>
 
       <Drawer>
-        <DrawerTrigger className={`${buttonVariants({ variant: "outline" })}`}>
+        <DrawerTrigger className={`${buttonVariants({ variant: "default" })}`}>
           Crew
         </DrawerTrigger>
         <DrawerContent>
@@ -62,7 +62,7 @@ const DrawerInformation = ({ movie }: { movie: DetailMovieType }) => {
       </Drawer>
 
       <Drawer>
-        <DrawerTrigger className={`${buttonVariants({ variant: "outline" })}`}>
+        <DrawerTrigger className={`${buttonVariants({ variant: "default" })}`}>
           Production Companies
         </DrawerTrigger>
         <DrawerContent>
@@ -79,7 +79,7 @@ const DrawerInformation = ({ movie }: { movie: DetailMovieType }) => {
           </DrawerFooter>
         </DrawerContent>
       </Drawer>
-    </>
+    </div>
   );
 };
 

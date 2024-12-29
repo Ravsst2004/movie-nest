@@ -43,15 +43,21 @@ const DetailMovie = () => {
             initial="hidden"
             animate="visible"
             transition={{ duration: 0.7, delay: 0.3 }}
-            className="text-xs md:text-sm lg:text-base xl:text-lg md:max-w-[70%]"
+            className="hidden md:block text-xs md:text-sm lg:text-base xl:text-lg md:max-w-[70%]"
           >
             {movie.overview}
           </motion.p>
+
+          <div className="hidden md:block">
+            <OtherDetailInformation movie={movie} />
+          </div>
           {/* TODO: Add button for trailer movie*/}
         </div>
       </div>
 
-      <OtherDetailInformation movie={movie} />
+      <div className="md:hidden">
+        <OtherDetailInformation movie={movie} />
+      </div>
     </section>
   );
 };
