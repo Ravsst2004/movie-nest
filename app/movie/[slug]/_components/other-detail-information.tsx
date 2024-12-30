@@ -4,7 +4,7 @@ import { DetailMovieType } from "@/types/detail-movie";
 import { SpokenLanguages } from "@/types/spoken-languages";
 import DrawerInformation from "./drawer-information";
 import { Button, buttonVariants } from "@/components/ui/button";
-import { Bookmark, BookmarkCheck, Film, Heart, Link2 } from "lucide-react";
+import { Film, Link2 } from "lucide-react";
 import Link from "next/link";
 import {
   Dialog,
@@ -22,6 +22,11 @@ import {
 } from "@/lib/features/thunk/watchlist-thunk";
 import { AppDispatch, RootState } from "@/lib/store";
 import { useEffect, useState } from "react";
+import { FaBookmark, FaHeart, FaRegBookmark, FaRegHeart } from "react-icons/fa";
+import {
+  addToFavorite,
+  removeFromFavorite,
+} from "@/lib/features/thunk/favorite-thunk";
 
 const OtherDetailInformation = ({ movie }: { movie: DetailMovieType }) => {
   const dispatch = useDispatch<AppDispatch>();
@@ -29,8 +34,12 @@ const OtherDetailInformation = ({ movie }: { movie: DetailMovieType }) => {
   const { movies: watchlistedMovies } = useSelector(
     (state: RootState) => state.watchlist
   );
+  const { movies: favoriteMovies } = useSelector(
+    (state: RootState) => state.favorite
+  );
 
   const [isWatchlisted, setIsWatchlisted] = useState(false);
+  const [isFavorite, setIsFavorite] = useState(false);
 
   useEffect(() => {
     if (user && sessionId) {
@@ -41,6 +50,10 @@ const OtherDetailInformation = ({ movie }: { movie: DetailMovieType }) => {
   useEffect(() => {
     setIsWatchlisted(watchlistedMovies.some((item) => item.id === movie.id));
   }, [watchlistedMovies, movie.id]);
+
+  useEffect(() => {
+    setIsFavorite(favoriteMovies.some((item) => item.id === movie.id));
+  }, [favoriteMovies, movie.id]);
 
   const handleAddWatchlist = async () => {
     if (!user || !sessionId) {
@@ -66,6 +79,32 @@ const OtherDetailInformation = ({ movie }: { movie: DetailMovieType }) => {
     }
 
     setIsWatchlisted(!isWatchlisted);
+  };
+
+  const handleFavorite = async () => {
+    if (!user || !sessionId) {
+      return;
+    }
+
+    if (isFavorite) {
+      await dispatch(
+        removeFromFavorite({
+          movieId: movie.id,
+          userId: user.id,
+          sessionId,
+        })
+      ).unwrap();
+    } else {
+      await dispatch(
+        addToFavorite({
+          movieId: movie.id,
+          userId: user.id,
+          sessionId,
+        })
+      ).unwrap();
+    }
+
+    setIsFavorite(!isFavorite);
   };
 
   const firstBlock = (
@@ -118,11 +157,11 @@ const OtherDetailInformation = ({ movie }: { movie: DetailMovieType }) => {
     <div className="lg:w-fit bg-gray-300 rounded-md bg-clip-padding backdrop-filter backdrop-blur-sm bg-opacity-20 border border-gray-100 p-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-1 gap-2">
       <Button onClick={handleAddWatchlist}>
         Watchlist
-        {isWatchlisted ? <BookmarkCheck /> : <Bookmark />}
+        {isWatchlisted ? <FaBookmark /> : <FaRegBookmark />}
       </Button>
-      <Button>
+      <Button onClick={handleFavorite}>
         Favorite
-        <Heart />
+        {isFavorite ? <FaHeart /> : <FaRegHeart />}
       </Button>
       <Button asChild>
         <Link
