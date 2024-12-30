@@ -27,6 +27,7 @@ import {
   addToFavorite,
   removeFromFavorite,
 } from "@/lib/features/thunk/favorite-thunk";
+import { motion } from "motion/react";
 
 const OtherDetailInformation = ({ movie }: { movie: DetailMovieType }) => {
   const dispatch = useDispatch<AppDispatch>();
@@ -155,13 +156,41 @@ const OtherDetailInformation = ({ movie }: { movie: DetailMovieType }) => {
 
   const thirdBlock = (
     <div className="lg:w-fit bg-gray-300 rounded-md bg-clip-padding backdrop-filter backdrop-blur-sm bg-opacity-20 border border-gray-100 p-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-1 gap-2">
-      <Button onClick={handleAddWatchlist}>
-        Watchlist
-        {isWatchlisted ? <FaBookmark /> : <FaRegBookmark />}
+      <Button
+        onClick={handleAddWatchlist}
+        asChild
+      >
+        <motion.div
+          whileTap={{ scale: 0.9 }}
+          transition={{
+            type: "spring",
+            stiffness: 400,
+            damping: 17,
+            duration: 0.3,
+          }}
+          className="cursor-pointer hover:bg-gray-200"
+        >
+          Watchlist
+          {isWatchlisted ? <FaBookmark /> : <FaRegBookmark />}
+        </motion.div>
       </Button>
-      <Button onClick={handleFavorite}>
-        Favorite
-        {isFavorite ? <FaHeart /> : <FaRegHeart />}
+      <Button
+        onClick={handleFavorite}
+        asChild
+      >
+        <motion.div
+          whileTap={{ scale: 0.9 }}
+          transition={{
+            type: "spring",
+            stiffness: 400,
+            damping: 17,
+            duration: 0.3,
+          }}
+          className="cursor-pointer hover:bg-gray-200"
+        >
+          Favorite
+          {isFavorite ? <FaHeart /> : <FaRegHeart />}
+        </motion.div>
       </Button>
       <Button asChild>
         <Link
@@ -173,8 +202,22 @@ const OtherDetailInformation = ({ movie }: { movie: DetailMovieType }) => {
         </Link>
       </Button>
       <Dialog>
-        <DialogTrigger className={`${buttonVariants({ variant: "default" })}`}>
-          Trailer <Film />
+        <DialogTrigger
+          asChild
+          className={`${buttonVariants({ variant: "default" })}`}
+        >
+          <motion.div
+            whileTap={{ scale: 0.9 }}
+            transition={{
+              type: "spring",
+              stiffness: 400,
+              damping: 17,
+              duration: 0.3,
+            }}
+            className="cursor-pointer hover:bg-gray-200 flex items-center gap-2"
+          >
+            Trailer <Film />
+          </motion.div>
         </DialogTrigger>
         <DialogContent className="h-[30rem] md:w-[40rem]">
           <DialogHeader>

@@ -6,6 +6,9 @@ import { getWatchlist } from "@/lib/features/thunk/watchlist-thunk";
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getFavorite } from "@/lib/features/thunk/favorite-thunk";
+import Image from "next/image";
+import FavoriteMovieList from "./_components/favorite-movie-list";
+import WatchlistMovieList from "./_components/watchlist-movie-list";
 
 const ProfilePage = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -40,51 +43,23 @@ const ProfilePage = () => {
   }
 
   return (
-    <>
-      <div className="text-white">
-        <h1 className="text-2xl font-bold mb-4">
-          {user.username}&apos;s Watchlist
-        </h1>
-        {watchlistMovies.length > 0 ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {watchlistMovies.map((movie, index) => (
-              <div
-                key={index}
-                className="p-4 bg-gray-800 rounded-lg shadow-md"
-              >
-                <h2 className="text-lg font-semibold">{movie.title}</h2>
-                <p className="text-sm text-gray-400">{movie.release_date}</p>
-                <p className="text-sm">{movie.overview}</p>
-              </div>
-            ))}
-          </div>
-        ) : (
-          <p>No movies in your watchlist yet.</p>
-        )}
+    <section className="px-2 flex flex-col lg:flex-row gap-2 w-full">
+      <div className="lg:w-[10%]">
+        <Image
+          src={`https://gravatar.com/avatar/${user?.avatar?.gravatar?.hash}?s=400`}
+          alt={user.username}
+          width={100}
+          height={100}
+          className="rounded"
+        />
+        <h1 className="text-2xl font-bold">{user.username}</h1>
       </div>
 
-      <div className="text-white">
-        <h1 className="text-2xl font-bold mb-4">
-          {user.username}&apos;s Watchlist
-        </h1>
-        {favoriteMovies.length > 0 ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {favoriteMovies.map((movie, index) => (
-              <div
-                key={index}
-                className="p-4 bg-gray-800 rounded-lg shadow-md"
-              >
-                <h2 className="text-lg font-semibold">{movie.title}</h2>
-                <p className="text-sm text-gray-400">{movie.release_date}</p>
-                <p className="text-sm">{movie.overview}</p>
-              </div>
-            ))}
-          </div>
-        ) : (
-          <p>No movies in your watchlist yet.</p>
-        )}
+      <div className="lg:w-[90%] space-y-6">
+        <WatchlistMovieList watchlistMovies={watchlistMovies} />
+        <FavoriteMovieList favoriteMovies={favoriteMovies} />
       </div>
-    </>
+    </section>
   );
 };
 
