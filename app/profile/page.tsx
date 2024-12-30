@@ -1,42 +1,54 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
-import { logout } from "@/lib/features/slice/auth-slice";
-import { RootState } from "@/store/store";
+import { setSessionId } from "@/lib/features/slice/auth-slice";
+import { RootState } from "@/lib/store";
+import { useGetWatchListMoviesQuery } from "@/services/tmdb-api";
+import { DetailMovieType } from "@/types/detail-movie";
 import { useRouter } from "next/navigation";
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 const ProfilePage = () => {
-  const dispatch = useDispatch();
-  const { user } = useSelector((state: RootState) => state.auth);
   const router = useRouter();
+  const dispatch = useDispatch();
+  const { user, sessionId } = useSelector((state: RootState) => state.auth);
 
   useEffect(() => {
-    if (!user) {
-      router.push("/");
+    if (!sessionId) {
+      dispatch(setSessionId(sessionStorage.getItem("sessionId") || ""));
     }
-  }, [user, router]);
+  }, [dispatch, sessionId]);
 
-  const handleLogout = () => {
-    dispatch(logout());
-    router.push("/");
-  };
+  const { data: watchListMovies } = useGetWatchListMoviesQuery(
+    {
+      userId: user?.id,
+      sessionId,
+    },
+    {
+      skip: !sessionId,
+    }
+  );
 
-  if (!user) {
-    return null;
-  }
+  useEffect(() => {
+    if (!user || !sessionId) {
+    }
+  }, [router, sessionId, user]);
 
   return (
-    <div className="px-2">
-      Profile
-      <h1>{user?.username}</h1>
-      <Button
-        variant={"destructive"}
-        onClick={handleLogout}
-      >
-        Logout
-      </Button>
+    <div>
+      <h1>{user?.username}&apos;s Watchlist</h1>
+      <div>
+        {watchListMovies?.results?.map((movie: DetailMovieType) => {
+          return (
+            <div
+              key={movie.id}
+              className="text-white"
+            >
+              {movie.title}
+            </div>
+          );
+        })}
+      </div>
     </div>
   );
 };

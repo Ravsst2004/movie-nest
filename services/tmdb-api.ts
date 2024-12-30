@@ -46,6 +46,11 @@ export const tmdbApi = createApi({
       query: ({ id }) =>
         `/movie/${id}?append_to_response=videos,credits,similar,reviews&api_key=${tmdbApiKey}`,
     }),
+
+    getWatchListMovies: builder.query({
+      query: ({ userId, sessionId }) =>
+        `/account/${userId}/watchlist/movies?api_key=${tmdbApiKey}&session_id=${sessionId}`,
+    }),
   }),
 });
 
@@ -55,4 +60,5 @@ export const {
   useGetMovieBySearchQuery,
   useGetMovieGenresQuery,
   useGetMovieDetailQuery,
+  useGetWatchListMoviesQuery,
 } = tmdbApi;

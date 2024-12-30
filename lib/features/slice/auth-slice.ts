@@ -1,4 +1,4 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { createSession, fetchRequestToken } from "../thunk/auth-thunk";
 import { User } from "@/types/user";
 
@@ -42,6 +42,9 @@ export const authSlice = createSlice({
         state.isAuthenticated = true;
       }
     },
+    setSessionId: (state, action: PayloadAction<string>) => {
+      state.sessionId = action.payload;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -57,5 +60,5 @@ export const authSlice = createSlice({
   },
 });
 
-export const { logout, setUserData } = authSlice.actions;
+export const { logout, setUserData, setSessionId } = authSlice.actions;
 export default authSlice.reducer;

@@ -12,7 +12,6 @@ const DetailMovie = () => {
   const { slug } = useParams();
   const movieId = slug?.toString().split("-").pop();
   const { data: movie, isLoading } = useGetMovieDetailQuery({ id: movieId });
-  console.log(movie);
 
   if (isLoading) return <Loading />;
 
@@ -48,14 +47,14 @@ const DetailMovie = () => {
             {movie.overview}
           </motion.p>
 
-          <div className="hidden md:block">
+          <div className="hidden lg:block">
             <OtherDetailInformation movie={movie} />
           </div>
           {/* TODO: Add button for trailer movie*/}
         </div>
       </div>
 
-      <div className="md:hidden">
+      <div className="lg:hidden">
         <OtherDetailInformation movie={movie} />
       </div>
     </section>

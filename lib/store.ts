@@ -3,6 +3,7 @@ import { configureStore } from "@reduxjs/toolkit";
 import { authApi } from "@/services/auth-api";
 import { authSlice } from "@/lib/features/slice/auth-slice";
 import { movieSlice } from "@/lib/features/slice/movie-slice";
+import { watchlistSlice } from "./features/slice/watchlist-slice";
 
 export const store = configureStore({
   reducer: {
@@ -10,6 +11,7 @@ export const store = configureStore({
     [authApi.reducerPath]: authApi.reducer,
     movie: movieSlice.reducer,
     auth: authSlice.reducer,
+    watchlist: watchlistSlice.reducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware()

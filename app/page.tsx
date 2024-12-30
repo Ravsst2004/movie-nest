@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import MovieCard from "@/components/movie-card";
 import { useGetMovieGenresQuery, useGetMoviesQuery } from "@/services/tmdb-api";
 import { MovieResultType } from "@/types/movies";
@@ -20,6 +20,7 @@ import { Input } from "@/components/ui/input";
 import Loading from "./loading";
 import { GenreType } from "@/types/genres";
 import { RootState } from "@/lib/store";
+import { setSessionId } from "@/lib/features/slice/auth-slice";
 
 const HomePage = () => {
   const dispatch = useDispatch();

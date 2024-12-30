@@ -4,9 +4,8 @@ import { DetailMovieType } from "@/types/detail-movie";
 import { SpokenLanguages } from "@/types/spoken-languages";
 import DrawerInformation from "./drawer-information";
 import { Button, buttonVariants } from "@/components/ui/button";
-import { Bookmark, Film, Heart, Link2 } from "lucide-react";
+import { Bookmark, BookmarkCheck, Film, Heart, Link2 } from "lucide-react";
 import Link from "next/link";
-import { useState } from "react";
 import {
   Dialog,
   DialogContent,
@@ -15,14 +14,57 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { useDispatch, useSelector } from "react-redux";
+import { addToWatchlist } from "@/lib/features/thunk/watchlist-thunk";
+import { AppDispatch, RootState } from "@/lib/store";
+import { useGetWatchListMoviesQuery } from "@/services/tmdb-api";
+import { useEffect, useState } from "react";
+import { setSessionId } from "@/lib/features/slice/auth-slice";
 
 const OtherDetailInformation = ({ movie }: { movie: DetailMovieType }) => {
-  const [isTrailerOpen, setIsTrailerOpen] = useState(false);
+  const dispatch = useDispatch<AppDispatch>();
+  const { user, sessionId } = useSelector((state: RootState) => state.auth);
+  const [watchlistedMovie, setWatchlistedMovie] =
+    useState<DetailMovieType | null>(null);
 
-  const handleOpenTrailer = () => setIsTrailerOpen(true);
+  console.log(watchlistedMovie);
+
+  useEffect(() => {
+    if (!sessionId) {
+      dispatch(setSessionId(sessionStorage.getItem("sessionId") || ""));
+    }
+  }, [dispatch, sessionId]);
+
+  const { data: watchListMovies } = useGetWatchListMoviesQuery(
+    {
+      userId: user?.id,
+      sessionId,
+    },
+    {
+      skip: !sessionId,
+    }
+  );
+
+  useEffect(() => {
+    setWatchlistedMovie(
+      watchListMovies?.results?.find(
+        (movie: DetailMovieType) => movie.id === movie.id
+      )
+    );
+  }, [watchListMovies, movie.id]);
+
+  const handleAddWatchlist = async () => {
+    if (!user || !sessionId) {
+      return;
+    }
+
+    await dispatch(
+      addToWatchlist({ movieId: movie.id, userId: user?.id, sessionId })
+    );
+  };
 
   const firstBlock = (
-    <div className="md:w-fit space-y-2">
+    <div className="lg:w-fit space-y-2">
       <div className="space-y-2 h-full w-full bg-gray-300 rounded-md bg-clip-padding backdrop-filter backdrop-blur-sm bg-opacity-20 border border-gray-100 p-4 ">
         <h1 className="text-xl font-semibold md:hidden">{movie.title}</h1>
         <p className="md:hidden text-xs md:text-sm lg:text-base xl:text-lg md:max-w-[70%]">
@@ -50,7 +92,7 @@ const OtherDetailInformation = ({ movie }: { movie: DetailMovieType }) => {
   );
 
   const secondBlock = (
-    <div className="md:w-[70%] bg-gray-300 rounded-md bg-clip-padding backdrop-filter backdrop-blur-sm bg-opacity-20 border border-gray-100 p-4 space-y-2">
+    <div className="lg:w-fit xl:w-[70%] bg-gray-300 rounded-md bg-clip-padding backdrop-filter backdrop-blur-sm bg-opacity-20 border border-gray-100 p-4 space-y-2">
       {movie.tagline && (
         <TextInformation label="Tagline">{movie.tagline}</TextInformation>
       )}
@@ -68,10 +110,10 @@ const OtherDetailInformation = ({ movie }: { movie: DetailMovieType }) => {
   );
 
   const thirdBlock = (
-    <div className="md:w-fit bg-gray-300 rounded-md bg-clip-padding backdrop-filter backdrop-blur-sm bg-opacity-20 border border-gray-100 p-4 flex flex-wrap md:flex-col gap-2">
-      <Button>
+    <div className="lg:w-fit bg-gray-300 rounded-md bg-clip-padding backdrop-filter backdrop-blur-sm bg-opacity-20 border border-gray-100 p-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-1 gap-2">
+      <Button onClick={handleAddWatchlist}>
         Watchlist
-        <Bookmark />
+        {watchlistedMovie ? <BookmarkCheck /> : <Bookmark />}
       </Button>
       <Button>
         Favorite
@@ -110,8 +152,8 @@ const OtherDetailInformation = ({ movie }: { movie: DetailMovieType }) => {
   );
 
   return (
-    <article className="my-4 max-w-7xl md:max-w-full mx-auto">
-      <div className="pt-2 w-full flex flex-col md:flex-row gap-2">
+    <article className="my-4 max-w-7xl lg:max-w-full mx-auto">
+      <div className="pt-2 w-full flex flex-col lg:flex-row gap-2">
         {firstBlock}
         {secondBlock}
         {thirdBlock}
