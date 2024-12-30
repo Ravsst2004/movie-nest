@@ -1,17 +1,17 @@
 "use client";
 
 import { setSessionId } from "@/lib/features/slice/auth-slice";
-import { RootState } from "@/lib/store";
-import { useGetWatchListMoviesQuery } from "@/services/tmdb-api";
-import { DetailMovieType } from "@/types/detail-movie";
-import { useRouter } from "next/navigation";
+import { AppDispatch, RootState } from "@/lib/store";
+import { getWatchlist } from "@/lib/features/thunk/watchlist-thunk";
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 const ProfilePage = () => {
-  const router = useRouter();
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
   const { user, sessionId } = useSelector((state: RootState) => state.auth);
+  const { movies: watchlistMovies } = useSelector(
+    (state: RootState) => state.watchlist
+  );
 
   useEffect(() => {
     if (!sessionId) {
@@ -19,36 +19,37 @@ const ProfilePage = () => {
     }
   }, [dispatch, sessionId]);
 
-  const { data: watchListMovies } = useGetWatchListMoviesQuery(
-    {
-      userId: user?.id,
-      sessionId,
-    },
-    {
-      skip: !sessionId,
-    }
-  );
-
   useEffect(() => {
-    if (!user || !sessionId) {
+    if (user && sessionId) {
+      dispatch(getWatchlist({ userId: user.id, sessionId }));
     }
-  }, [router, sessionId, user]);
+  }, [dispatch, user, sessionId]);
+
+  if (!user) {
+    return <p>Please log in to view your profile.</p>;
+  }
 
   return (
-    <div>
-      <h1>{user?.username}&apos;s Watchlist</h1>
-      <div>
-        {watchListMovies?.results?.map((movie: DetailMovieType) => {
-          return (
+    <div className="text-white">
+      <h1 className="text-2xl font-bold mb-4">
+        {user.username}&apos;s Watchlist
+      </h1>
+      {watchlistMovies.length > 0 ? (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          {watchlistMovies.map((movie, index) => (
             <div
-              key={movie.id}
-              className="text-white"
+              key={index}
+              className="p-4 bg-gray-800 rounded-lg shadow-md"
             >
-              {movie.title}
+              <h2 className="text-lg font-semibold">{movie.title}</h2>
+              <p className="text-sm text-gray-400">{movie.release_date}</p>
+              <p className="text-sm">{movie.overview}</p>
             </div>
-          );
-        })}
-      </div>
+          ))}
+        </div>
+      ) : (
+        <p>No movies in your watchlist yet.</p>
+      )}
     </div>
   );
 };

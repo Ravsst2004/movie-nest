@@ -15,52 +15,57 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { useDispatch, useSelector } from "react-redux";
-import { addToWatchlist } from "@/lib/features/thunk/watchlist-thunk";
+import {
+  addToWatchlist,
+  getWatchlist,
+  removeFromWatchlist,
+} from "@/lib/features/thunk/watchlist-thunk";
 import { AppDispatch, RootState } from "@/lib/store";
-import { useGetWatchListMoviesQuery } from "@/services/tmdb-api";
 import { useEffect, useState } from "react";
-import { setSessionId } from "@/lib/features/slice/auth-slice";
 
 const OtherDetailInformation = ({ movie }: { movie: DetailMovieType }) => {
   const dispatch = useDispatch<AppDispatch>();
   const { user, sessionId } = useSelector((state: RootState) => state.auth);
-  const [watchlistedMovie, setWatchlistedMovie] =
-    useState<DetailMovieType | null>(null);
-
-  console.log(watchlistedMovie);
-
-  useEffect(() => {
-    if (!sessionId) {
-      dispatch(setSessionId(sessionStorage.getItem("sessionId") || ""));
-    }
-  }, [dispatch, sessionId]);
-
-  const { data: watchListMovies } = useGetWatchListMoviesQuery(
-    {
-      userId: user?.id,
-      sessionId,
-    },
-    {
-      skip: !sessionId,
-    }
+  const { movies: watchlistedMovies } = useSelector(
+    (state: RootState) => state.watchlist
   );
 
+  const [isWatchlisted, setIsWatchlisted] = useState(false);
+
   useEffect(() => {
-    setWatchlistedMovie(
-      watchListMovies?.results?.find(
-        (movie: DetailMovieType) => movie.id === movie.id
-      )
-    );
-  }, [watchListMovies, movie.id]);
+    if (user && sessionId) {
+      dispatch(getWatchlist({ userId: user.id, sessionId }));
+    }
+  }, [dispatch, user, sessionId]);
+
+  useEffect(() => {
+    setIsWatchlisted(watchlistedMovies.some((item) => item.id === movie.id));
+  }, [watchlistedMovies, movie.id]);
 
   const handleAddWatchlist = async () => {
     if (!user || !sessionId) {
       return;
     }
 
-    await dispatch(
-      addToWatchlist({ movieId: movie.id, userId: user?.id, sessionId })
-    );
+    if (isWatchlisted) {
+      await dispatch(
+        removeFromWatchlist({
+          movieId: movie.id,
+          userId: user.id,
+          sessionId,
+        })
+      ).unwrap();
+    } else {
+      await dispatch(
+        addToWatchlist({
+          movieId: movie.id,
+          userId: user.id,
+          sessionId,
+        })
+      ).unwrap();
+    }
+
+    setIsWatchlisted(!isWatchlisted);
   };
 
   const firstBlock = (
@@ -113,7 +118,7 @@ const OtherDetailInformation = ({ movie }: { movie: DetailMovieType }) => {
     <div className="lg:w-fit bg-gray-300 rounded-md bg-clip-padding backdrop-filter backdrop-blur-sm bg-opacity-20 border border-gray-100 p-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-1 gap-2">
       <Button onClick={handleAddWatchlist}>
         Watchlist
-        {watchlistedMovie ? <BookmarkCheck /> : <Bookmark />}
+        {isWatchlisted ? <BookmarkCheck /> : <Bookmark />}
       </Button>
       <Button>
         Favorite

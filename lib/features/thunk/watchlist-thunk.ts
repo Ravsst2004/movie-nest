@@ -45,7 +45,6 @@ export const addToWatchlist = createAsyncThunk(
   }
 );
 
-// TODO: Implement remove from watchlist
 export const removeFromWatchlist = createAsyncThunk(
   "watchlist/removeFromWatchlist",
   async (
@@ -72,6 +71,37 @@ export const removeFromWatchlist = createAsyncThunk(
         const errorData = await response.json();
         return rejectWithValue(
           errorData.status_message || "Failed to remove from watchlist"
+        );
+      }
+
+      return await response.json();
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        return rejectWithValue(error.message);
+      }
+      return rejectWithValue("Unknown error occurred");
+    }
+  }
+);
+
+export const getWatchlist = createAsyncThunk(
+  "watchlist/getWatchlist",
+  async (
+    {
+      userId,
+      sessionId,
+    }: { userId: number | undefined; sessionId: string | null },
+    { rejectWithValue }
+  ) => {
+    try {
+      const response = await fetch(
+        `https://api.themoviedb.org/3/account/${userId}/watchlist/movies?api_key=${process.env.NEXT_PUBLIC_TMDB_API_KEY}&session_id=${sessionId}`
+      );
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        return rejectWithValue(
+          errorData.status_message || "Failed to fetch watchlist"
         );
       }
 
