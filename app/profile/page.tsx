@@ -2,10 +2,8 @@
 
 import { setSessionId } from "@/lib/features/slice/auth-slice";
 import { AppDispatch, RootState } from "@/lib/store";
-import { getWatchlist } from "@/lib/features/thunk/watchlist-thunk";
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getFavorite } from "@/lib/features/thunk/favorite-thunk";
 import Image from "next/image";
 import FavoriteMovieList from "./_components/favorite-movie-list";
 import WatchlistMovieList from "./_components/watchlist-movie-list";
@@ -13,30 +11,12 @@ import WatchlistMovieList from "./_components/watchlist-movie-list";
 const ProfilePage = () => {
   const dispatch = useDispatch<AppDispatch>();
   const { user, sessionId } = useSelector((state: RootState) => state.auth);
-  const { movies: watchlistMovies } = useSelector(
-    (state: RootState) => state.watchlist
-  );
-  const { movies: favoriteMovies } = useSelector(
-    (state: RootState) => state.favorite
-  );
 
   useEffect(() => {
     if (!sessionId) {
       dispatch(setSessionId(sessionStorage.getItem("sessionId") || ""));
     }
   }, [dispatch, sessionId]);
-
-  useEffect(() => {
-    if (user && sessionId) {
-      dispatch(getWatchlist({ userId: user.id, sessionId }));
-    }
-  }, [dispatch, user, sessionId]);
-
-  useEffect(() => {
-    if (user && sessionId) {
-      dispatch(getFavorite({ userId: user.id, sessionId }));
-    }
-  }, [dispatch, user, sessionId]);
 
   if (!user) {
     return <p>Please log in to view your profile.</p>;
@@ -56,8 +36,8 @@ const ProfilePage = () => {
       </div>
 
       <div className="lg:w-[90%] space-y-6">
-        <WatchlistMovieList watchlistMovies={watchlistMovies} />
-        <FavoriteMovieList favoriteMovies={favoriteMovies} />
+        <WatchlistMovieList />
+        <FavoriteMovieList />
       </div>
     </section>
   );

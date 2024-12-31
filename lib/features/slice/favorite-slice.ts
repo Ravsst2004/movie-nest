@@ -57,6 +57,7 @@ export const favoriteSlice = createSlice({
         state.movies = state.movies.filter(
           (movie) => movie.id !== action.payload.id
         );
+        console.log(state.movies);
       })
       .addCase(removeFromFavorite.rejected, (state, action) => {
         state.loading = false;
