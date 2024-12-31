@@ -4,6 +4,7 @@ import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import AppSidebar from "@/components/app-sidebar";
 import { Providers } from "@/app/store-provider";
 import { ThemeProvider } from "@/components/theme-provider";
+import Footer from "@/components/footer";
 
 export const metadata: Metadata = {
   title: "Movie Nest",
@@ -35,6 +36,7 @@ export default function RootLayout({
                 <main className="w-full overflow-x-hidden">
                   <SidebarTrigger />
                   {children}
+                  <Footer />
                 </main>
               </SidebarProvider>
             </section>
