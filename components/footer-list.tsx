@@ -10,7 +10,7 @@ const FooterList = ({
 }) => {
   return (
     <div className="footer-section">
-      <h4 className="text-xl font-semibold mb-4">{label}</h4>
+      <h1 className="text-xl font-semibold mb-4">{label}</h1>
       <ul className="space-y-3">
         {linkList.map((link) => (
           <li key={link.name}>
