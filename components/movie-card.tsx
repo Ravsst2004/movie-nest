@@ -1,44 +1,37 @@
 import Image from "next/image";
 import Link from "next/link";
-import Rating from "@mui/material/Rating";
 import { createSlug } from "@/lib/utils/create-slug";
 
 type MovieCardProps = {
   image: string;
   title: string;
   id: number;
-  voteAverage: number;
 };
 
-const MovieCard = ({ image, title, id, voteAverage }: MovieCardProps) => {
+const MovieCard = ({ image, title, id }: MovieCardProps) => {
   const slug = `${createSlug(title).toLowerCase()}-${id}`;
 
   return (
     <Link
       href={`/movie/${slug}`}
       passHref
-      className="flex flex-col justify-center items-center pb-4"
+      className="flex flex-col justify-center items-center"
     >
       <div className="relative w-fit">
         <Image
           src={image}
-          alt={title}
+          alt={`Poster of ${title}`}
           width={300}
           height={450}
-          priority
-          className="w-full h-[300px] object-cover rounded-lg"
+          loading="lazy"
+          className="object-cover rounded-lg"
+          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 300px"
         />
       </div>
 
-      <h1 className="text-center font-semibold pt-2 z-10 relative">{title}</h1>
-
-      <Rating
-        name="half-rating-read"
-        value={voteAverage / 2}
-        precision={0.5}
-        readOnly
-        sx={{ fontSize: "1.2rem" }}
-      />
+      <h1 className="text-center font-semibold pt-2 z-10 relative p-2">
+        {title}
+      </h1>
     </Link>
   );
 };

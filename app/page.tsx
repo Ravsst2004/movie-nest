@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo } from "react";
+import { useMemo } from "react";
 import MovieCard from "@/components/movie-card";
 import { useGetMovieGenresQuery, useGetMoviesQuery } from "@/services/tmdb-api";
 import { MovieResultType } from "@/types/movies";
@@ -11,8 +11,6 @@ import {
   PaginationContent,
   PaginationItem,
   PaginationLink,
-  PaginationNext,
-  PaginationPrevious,
 } from "@/components/ui/pagination";
 import { motion } from "motion/react";
 import { setPage, setSearch } from "@/lib/features/slice/movie-slice";
@@ -20,7 +18,6 @@ import { Input } from "@/components/ui/input";
 import Loading from "./loading";
 import { GenreType } from "@/types/genres";
 import { RootState } from "@/lib/store";
-import { setSessionId } from "@/lib/features/slice/auth-slice";
 
 const HomePage = () => {
   const dispatch = useDispatch();
@@ -37,11 +34,9 @@ const HomePage = () => {
 
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.value === "") return dispatch(setSearch(""));
-    console.log("search");
-
     setTimeout(() => {
       dispatch(setSearch(e.target.value));
-    }, 300);
+    }, 400);
   };
 
   const ListTitle = useMemo(() => {
@@ -66,7 +61,6 @@ const HomePage = () => {
             image={`https://image.tmdb.org/t/p/w500/${movie.poster_path}`}
             title={movie.title}
             id={movie.id}
-            voteAverage={movie.vote_average}
           />
         </motion.div>
       );
@@ -107,15 +101,30 @@ const HomePage = () => {
           <PaginationContent>
             {page > 1 && (
               <PaginationItem onClick={() => dispatch(setPage(page - 1))}>
-                <PaginationPrevious href="#movie-list"></PaginationPrevious>
+                <PaginationLink
+                  href="#movie-list"
+                  aria-label="Previous page"
+                >
+                  &lt;
+                </PaginationLink>
               </PaginationItem>
             )}
             <PaginationItem>
-              <PaginationLink href="#movie-list">{page}</PaginationLink>
+              <PaginationLink
+                href="#movie-list"
+                aria-current="page"
+              >
+                {page}
+              </PaginationLink>
             </PaginationItem>
             {page < movies?.total_pages && (
               <PaginationItem onClick={() => dispatch(setPage(page + 1))}>
-                <PaginationNext href="#movie-list" />
+                <PaginationLink
+                  href="#movie-list"
+                  aria-label="Next page"
+                >
+                  &gt;
+                </PaginationLink>
               </PaginationItem>
             )}
           </PaginationContent>

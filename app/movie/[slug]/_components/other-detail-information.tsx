@@ -156,24 +156,22 @@ const OtherDetailInformation = ({ movie }: { movie: DetailMovieType }) => {
 
   const thirdBlock = (
     <div className="lg:w-fit bg-gray-300 rounded-md bg-clip-padding backdrop-filter backdrop-blur-sm bg-opacity-20 border border-gray-100 p-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-1 gap-2">
-      <Button
+      <motion.div
         onClick={handleAddWatchlist}
-        asChild
+        whileTap={{ scale: 0.9 }}
+        transition={{
+          type: "spring",
+          stiffness: 400,
+          damping: 17,
+          duration: 0.3,
+        }}
+        className={`cursor-pointer ${buttonVariants({
+          variant: "default",
+        })}`}
       >
-        <motion.div
-          whileTap={{ scale: 0.9 }}
-          transition={{
-            type: "spring",
-            stiffness: 400,
-            damping: 17,
-            duration: 0.3,
-          }}
-          className="cursor-pointer hover:bg-gray-200"
-        >
-          Watchlist
-          {isWatchlisted ? <FaBookmark /> : <FaRegBookmark />}
-        </motion.div>
-      </Button>
+        Watchlist
+        {isWatchlisted ? <FaBookmark /> : <FaRegBookmark />}
+      </motion.div>
       <Button
         onClick={handleFavorite}
         asChild
@@ -192,21 +190,21 @@ const OtherDetailInformation = ({ movie }: { movie: DetailMovieType }) => {
           {isFavorite ? <FaHeart /> : <FaRegHeart />}
         </motion.div>
       </Button>
-      <Button asChild>
-        <Link
-          href={`https://www.imdb.com/title/${movie?.imdb_id}`}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          IMDB <Link2 />
-        </Link>
-      </Button>
+      <Link
+        href={`https://www.imdb.com/title/${movie?.imdb_id}`}
+        target="_blank"
+        rel="noopener noreferrer"
+        className={buttonVariants({ variant: "default" })}
+      >
+        IMDB <Link2 />
+      </Link>
       <Dialog>
-        <DialogTrigger
-          asChild
-          className={`${buttonVariants({ variant: "default" })}`}
-        >
+        <DialogTrigger asChild>
           <motion.div
+            role="button"
+            aria-haspopup="dialog"
+            aria-controls="dialog-content-id"
+            aria-label={`Button to open trailer of ${movie.title}`}
             whileTap={{ scale: 0.9 }}
             transition={{
               type: "spring",
@@ -214,20 +212,27 @@ const OtherDetailInformation = ({ movie }: { movie: DetailMovieType }) => {
               damping: 17,
               duration: 0.3,
             }}
-            className="cursor-pointer hover:bg-gray-200 flex items-center gap-2"
+            className={`cursor-pointer flex items-center gap-2 ${buttonVariants(
+              {
+                variant: "default",
+              }
+            )}`}
           >
             Trailer <Film />
           </motion.div>
         </DialogTrigger>
-        <DialogContent className="h-[30rem] md:w-[40rem]">
+        <DialogContent
+          id="dialog-content-id"
+          className="h-[30rem] md:w-[40rem]"
+        >
           <DialogHeader>
             <DialogTitle>Trailer of {movie.title}</DialogTitle>
             <DialogDescription className="h-full w-full">
               {movie?.videos?.results?.length > 0 ? (
                 <iframe
-                  title="Trailer"
+                  title={`Trailer of ${movie.title}`}
                   src={`https://www.youtube.com/embed/${movie.videos.results[0].key}`}
-                  allow="autoPlay"
+                  allow="autoplay"
                   className="w-full h-full"
                 />
               ) : null}

@@ -34,6 +34,7 @@ import Image from "next/image";
 import { Button } from "./ui/button";
 import ToggleMode from "./toggle-mode";
 import LogoutButton from "./logout-button";
+import { Skeleton } from "./ui/skeleton";
 
 type GenreWithIconsType = {
   id: number;
@@ -46,7 +47,7 @@ const AppSidebar = () => {
 
   const { state } = useSidebar();
   const dispatch = useDispatch<AppDispatch>();
-  const { data: genres } = useGetMovieGenresQuery({});
+  const { data: genres, isLoading } = useGetMovieGenresQuery({});
   const { requestToken, user, isAuthenticated } = useSelector(
     (state: RootState) => state.auth
   );
@@ -92,63 +93,53 @@ const AppSidebar = () => {
     })
   );
 
-  const displayCategories = useMemo(() => {
-    return CATEGORIES.map((category) => {
-      let hrefLink;
-      if (pathname === "/") {
-        hrefLink = `#${category.apiName}`;
-      } else {
-        hrefLink = `/`;
-      }
+  const displayCategories = CATEGORIES.map((category) => {
+    const hrefLink = pathname === "/" ? `#${category.apiName}` : `/`;
 
-      return (
-        <SidebarMenuItem key={category.id}>
-          <SidebarMenuButton
-            asChild
-            className="hover:bg-gray-200 dark:hover:text-black"
+    return (
+      <SidebarMenuItem key={category.id}>
+        <SidebarMenuButton
+          asChild
+          className="hover:bg-gray-200 dark:hover:text-black"
+        >
+          <Link
+            href={hrefLink}
+            onClick={() => dispatch(setCategory(category.apiName))}
+            className="text-xl flex space-x-2 cursor-pointer dark:active:text-white"
           >
-            <Link
-              href={hrefLink}
-              onClick={() => dispatch(setCategory(category.apiName))}
-              className="text-xl flex space-x-2 cursor-pointer dark:active:text-white"
-            >
-              <span className="w-fit h-fit">{category.icon}</span>
-              <span>{category.name}</span>
-            </Link>
-          </SidebarMenuButton>
-        </SidebarMenuItem>
-      );
-    });
-  }, [dispatch, pathname]);
+            <span className="w-fit h-fit">{category.icon}</span>
+            <span>{category.name}</span>
+          </Link>
+        </SidebarMenuButton>
+      </SidebarMenuItem>
+    );
+  });
 
-  const displayGenreIcon = useMemo(() => {
-    return genresWithIcons?.map((genre: GenreWithIconsType) => {
-      let hrefLink;
-      if (pathname === "/") {
-        hrefLink = `#${genre.name}`;
-      } else {
-        hrefLink = `/`;
-      }
+  const displayGenreIcon = useMemo(
+    () =>
+      genresWithIcons?.map((genre: GenreWithIconsType) => {
+        const hrefLink = pathname === "/" ? `#${genre.name}` : `/`;
 
-      return (
-        <SidebarMenuItem key={genre.id}>
-          <SidebarMenuButton
-            asChild
-            className="hover:bg-gray-200 dark:hover:text-black"
-          >
-            <Link
-              href={hrefLink}
-              onClick={() => dispatch(setGenreId(genre.id))}
-              className="text-xl flex space-x-2 cursor-pointer"
+        return (
+          <SidebarMenuItem key={genre.id}>
+            <SidebarMenuButton
+              asChild
+              className="hover:bg-gray-200 dark:hover:text-black"
             >
-              <span className="w-fit h-fit">{genre.icon}</span>
-              <span>{genre.name}</span>
-            </Link>
-          </SidebarMenuButton>
-        </SidebarMenuItem>
-      );
-    });
-  }, [dispatch, genresWithIcons, pathname]);
+              <Link
+                href={hrefLink}
+                onClick={() => dispatch(setGenreId(genre.id))}
+                className="text-xl flex space-x-2 cursor-pointer"
+              >
+                <span className="w-fit h-fit">{genre.icon}</span>
+                <span>{genre.name}</span>
+              </Link>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+        );
+      }),
+    [dispatch, genresWithIcons, pathname]
+  );
 
   return (
     <>
@@ -167,18 +158,45 @@ const AppSidebar = () => {
         </SidebarHeader>
         <SidebarContent>
           <SidebarGroup>
-            <SidebarGroupLabel className="text-base font-medium text-gray-500">
-              Categories
-            </SidebarGroupLabel>
-            <SidebarMenu>{displayCategories}</SidebarMenu>
+            {isLoading ? (
+              <div className="space-y-2">
+                {Array.from({ length: 3 }).map((_, index) => (
+                  <Skeleton
+                    key={index}
+                    className="h-6"
+                  ></Skeleton>
+                ))}
+              </div>
+            ) : (
+              <>
+                <SidebarGroupLabel className="text-base font-medium text-gray-500">
+                  Categories
+                </SidebarGroupLabel>
+                <SidebarMenu>{displayCategories}</SidebarMenu>
+              </>
+            )}
           </SidebarGroup>
           <SidebarGroup>
-            <SidebarGroupLabel className="text-base font-medium text-gray-500">
-              Genres
-            </SidebarGroupLabel>
-            <SidebarMenu>{displayGenreIcon}</SidebarMenu>
+            {isLoading ? (
+              <div className="space-y-2">
+                {Array.from({ length: 12 }).map((_, index) => (
+                  <Skeleton
+                    key={index}
+                    className="h-6"
+                  ></Skeleton>
+                ))}
+              </div>
+            ) : (
+              <>
+                <SidebarGroupLabel className="text-base font-medium text-gray-500">
+                  Genres
+                </SidebarGroupLabel>
+                <SidebarMenu>{displayGenreIcon}</SidebarMenu>
+              </>
+            )}
           </SidebarGroup>
         </SidebarContent>
+
         <SidebarFooter>
           <SidebarMenu>
             <SidebarMenuItem>
