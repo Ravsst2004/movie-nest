@@ -1,0 +1,3 @@
+.movie-title {
+  @apply text-sm md:text-base font-semibold text-white;
+}

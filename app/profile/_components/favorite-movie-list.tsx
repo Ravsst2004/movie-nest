@@ -10,12 +10,14 @@ import {
 import { AppDispatch, RootState } from "@/lib/store";
 import { createSlug } from "@/lib/utils/create-slug";
 import { HeartIcon } from "lucide-react";
+import { Skeleton } from "@/components/ui/skeleton";
+import "../profile.css";
 
 const FavoriteMovieList = () => {
   const dispatch = useDispatch<AppDispatch>();
   const { user, sessionId } = useSelector((state: RootState) => state.auth);
-  const favoriteMovies = useSelector(
-    (state: RootState) => state.favorite.movies
+  const { movies: favoriteMovies, loading } = useSelector(
+    (state: RootState) => state.favorite
   );
 
   useEffect(() => {
@@ -36,9 +38,18 @@ const FavoriteMovieList = () => {
     await dispatch(getFavorite({ userId: user.id, sessionId }));
   };
 
+  if (loading) {
+    return (
+      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
+        <Skeleton className="h-20"></Skeleton>
+        <Skeleton className="h-20"></Skeleton>
+      </div>
+    );
+  }
+
   return (
-    <div className="text-white">
-      <h1 className="text-2xl font-bold mb-2">Favorite</h1>
+    <div>
+      <h1 className="text-2xl font-bold mb-2 dark:text-white">Favorite</h1>
       {favoriteMovies.length > 0 ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
           {favoriteMovies.map((movie, index) => {
@@ -49,18 +60,18 @@ const FavoriteMovieList = () => {
               <Link
                 href={`/movie/${slug}`}
                 key={index}
-                className="p-2 bg-gray-800 rounded-lg shadow-md gap-2 w-fit"
+                className="flex p-2 bg-gray-800 rounded-lg shadow-md gap-2 w-full h-fit"
               >
                 <Image
                   src={`https://image.tmdb.org/t/p/original/${movie?.backdrop_path}`}
                   alt={movie.title || "Untitled Movie"}
-                  width={400}
-                  height={400}
+                  width={100}
+                  height={100}
                   priority
-                  className="rounded object-cover w-auto h-auto"
+                  className="rounded object-cover w-24 h-24"
                 />
                 <div className="p-2">
-                  <h2 className="text-xl font-semibold">
+                  <h2 className="movie-title">
                     {movie.title || "Untitled Movie"}
                   </h2>
                   <Button
@@ -68,7 +79,7 @@ const FavoriteMovieList = () => {
                       e.preventDefault();
                       handleFavorite(movie.id);
                     }}
-                    className="mt-4"
+                    className="mt-2 text-xs md:text-sm"
                   >
                     Remove <HeartIcon />
                   </Button>

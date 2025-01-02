@@ -18,7 +18,7 @@ const MovieCard = ({ image, title, id }: MovieCardProps) => {
       <div className="flex flex-col items-center">
         <Image
           src={image}
-          alt={title}
+          alt={`${title} poster`}
           width={300}
           height={450}
           className="object-cover rounded-lg"

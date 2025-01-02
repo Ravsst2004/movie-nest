@@ -1,11 +1,12 @@
 "use client";
 
 import { createSession } from "@/lib/features/thunk/auth-thunk";
+import { AppDispatch } from "@/lib/store";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 
 const ApprovedPage = () => {
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
 
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);

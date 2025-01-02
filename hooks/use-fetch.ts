@@ -14,8 +14,10 @@ const useFetch = (url: string) => {
         } else {
           setError(result);
         }
-      } catch (error) {
-        setError(error);
+      } catch (error: string | unknown) {
+        if (error instanceof Error) {
+          setError("Unknown error occurred");
+        }
       }
     },
     [url]
