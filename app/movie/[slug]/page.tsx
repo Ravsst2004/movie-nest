@@ -27,7 +27,7 @@ const DetailMovie = () => {
           className="w-auto h-auto md:w-full lg:h-[54rem] object-cover rounded-lg"
           priority
         />
-        <div className="absolute bottom-0 left-0 p-4 lg:p-8 text-white z-10 space-y-2">
+        <div className="absolute bottom-0 w-full left-0 p-4 lg:p-8 text-white z-10 space-y-2">
           <motion.h1
             variants={fadeIn}
             initial="hidden"
