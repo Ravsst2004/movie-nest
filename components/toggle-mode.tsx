@@ -1,20 +1,19 @@
 "use client";
 
-import * as React from "react";
 import { useTheme } from "next-themes";
-
-import { Button } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { useLayoutEffect } from "react";
 
 function ToggleMode() {
   const { setTheme } = useTheme();
 
-  React.useLayoutEffect(() => {
+  useLayoutEffect(() => {
     const originalPointerEvents = document.body.style.pointerEvents;
 
     return () => {
@@ -28,13 +27,11 @@ function ToggleMode() {
         asChild
         className="bg-zinc-900 text-white hover:bg-zinc-800 hover:text-white dark:bg-white dark:text-black dark:hover:bg-zinc-200 dark:hover:text-black"
       >
-        <Button
-          variant="outline"
-          size="icon"
-          className="w-full p-2 flex justify-center items-center"
+        <span
+          className={`w-full p-2 ${buttonVariants({ variant: "outline" })}`}
         >
-          <span className="">Toggle theme</span>
-        </Button>
+          Toggle theme
+        </span>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
         <DropdownMenuItem onClick={() => setTheme("light")}>

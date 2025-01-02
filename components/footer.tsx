@@ -3,17 +3,6 @@ import FooterList from "./footer-list";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
 
-const quickLinks = [
-  {
-    name: "Home",
-    link: "/",
-  },
-  {
-    name: "Profile",
-    link: "/profile",
-  },
-];
-
 const contactUs = [
   {
     name: "Email",
@@ -61,10 +50,6 @@ const Footer = () => {
       <footer className="text-gray-900 dark:text-white py-8 mt-20 border-t">
         <div className="container mx-auto px-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-12">
           <FooterList
-            label="Quick Links"
-            linkList={quickLinks}
-          />
-          <FooterList
             label="Contact Us"
             linkList={contactUs}
           />
@@ -92,7 +77,7 @@ const Footer = () => {
           </div>
         </div>
 
-        <div className="mt-12 border-t border-gray-700 pt-4 text-center text-gray-900 dark:text-white">
+        <div className="text-sm mt-12 border-t border-gray-700 pt-4 text-center text-gray-900 dark:text-white">
           <p>
             &copy; {new Date().getFullYear()} Movie Nest . All rights reserved.
           </p>

@@ -15,7 +15,10 @@ export const fetchRequestToken = createAsyncThunk(
       const data = await response.json();
       return data;
     } catch (error) {
-      return rejectWithValue(error.message);
+      if (error instanceof Error) {
+        return rejectWithValue(error.message);
+      }
+      return rejectWithValue("Unknown error occurred");
     }
   }
 );
@@ -42,7 +45,10 @@ export const createSession = createAsyncThunk(
       const data = await response.json();
       return data;
     } catch (error) {
-      return rejectWithValue(error.message);
+      if (error instanceof Error) {
+        return rejectWithValue(error.message);
+      }
+      return rejectWithValue("Unknown error occurred");
     }
   }
 );

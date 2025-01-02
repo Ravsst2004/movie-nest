@@ -51,7 +51,7 @@ const PlayingNow = () => {
                         width={1300}
                         height={50}
                         loading="lazy"
-                        className="w-auto h-auto md:w-full lg:h-[54rem] object-cover rounded-lg"
+                        className="w-auto h-auto md:w-full lg:h-[37rem] object-cover rounded-lg"
                       />
                       <div className="absolute bottom-0 left-0 p-4 lg:p-8 text-white z-10 space-y-2">
                         <motion.h1
@@ -59,7 +59,7 @@ const PlayingNow = () => {
                           initial="hidden"
                           animate="visible"
                           transition={{ duration: 0.7 }}
-                          className="text-xl md:text-3xl lg:text-5xl xl:text-7xl font-bold"
+                          className="text-xl md:text-3xl lg:text-5xl font-bold"
                         >
                           {movie.title}
                         </motion.h1>
@@ -68,7 +68,7 @@ const PlayingNow = () => {
                           initial="hidden"
                           animate="visible"
                           transition={{ duration: 0.7, delay: 0.3 }}
-                          className="text-xs md:text-sm lg:text-base xl:text-lg md:max-w-[70%]"
+                          className="text-sm lg:text-base md:max-w-[70%] hidden md:block"
                         >
                           {movie.overview}
                         </motion.p>

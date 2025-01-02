@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useMemo } from "react";
+import { useEffect } from "react";
 import {
   Sidebar,
   SidebarContent,
@@ -31,7 +31,7 @@ import { fetchRequestToken } from "@/lib/features/thunk/auth-thunk";
 import { setUserData } from "@/lib/features/slice/auth-slice";
 import { usePathname } from "next/navigation";
 import Image from "next/image";
-import { Button } from "./ui/button";
+import { buttonVariants } from "./ui/button";
 import ToggleMode from "./toggle-mode";
 import LogoutButton from "./logout-button";
 import { Skeleton } from "./ui/skeleton";
@@ -44,7 +44,6 @@ type GenreWithIconsType = {
 
 const AppSidebar = () => {
   const pathname = usePathname();
-
   const { state } = useSidebar();
   const dispatch = useDispatch<AppDispatch>();
   const { data: genres, isLoading } = useGetMovieGenresQuery({});
@@ -115,31 +114,27 @@ const AppSidebar = () => {
     );
   });
 
-  const displayGenreIcon = useMemo(
-    () =>
-      genresWithIcons?.map((genre: GenreWithIconsType) => {
-        const hrefLink = pathname === "/" ? `#${genre.name}` : `/`;
+  const displayGenreIcon = genresWithIcons?.map((genre: GenreWithIconsType) => {
+    const hrefLink = pathname === "/" ? `#${genre.name}` : `/`;
 
-        return (
-          <SidebarMenuItem key={genre.id}>
-            <SidebarMenuButton
-              asChild
-              className="hover:bg-gray-200 dark:hover:text-black"
-            >
-              <Link
-                href={hrefLink}
-                onClick={() => dispatch(setGenreId(genre.id))}
-                className="text-xl flex space-x-2 cursor-pointer"
-              >
-                <span className="w-fit h-fit">{genre.icon}</span>
-                <span>{genre.name}</span>
-              </Link>
-            </SidebarMenuButton>
-          </SidebarMenuItem>
-        );
-      }),
-    [dispatch, genresWithIcons, pathname]
-  );
+    return (
+      <SidebarMenuItem key={genre.id}>
+        <SidebarMenuButton
+          asChild
+          className="hover:bg-gray-200 dark:hover:text-black"
+        >
+          <Link
+            href={hrefLink}
+            onClick={() => dispatch(setGenreId(genre.id))}
+            className="text-xl flex space-x-2 cursor-pointer"
+          >
+            <span className="w-fit h-fit">{genre.icon}</span>
+            <span>{genre.name}</span>
+          </Link>
+        </SidebarMenuButton>
+      </SidebarMenuItem>
+    );
+  });
 
   return (
     <>
@@ -239,29 +234,30 @@ const AppSidebar = () => {
                       {isAuthenticated ? (
                         <LogoutButton />
                       ) : (
-                        <Button
-                          asChild
+                        <h1
                           onClick={handleLogin}
-                          variant={"default"}
+                          className={`flex items-center gap-2 w-full cursor-pointer ${buttonVariants(
+                            { variant: "default" }
+                          )}`}
                         >
-                          <h1 className="flex items-center gap-2 w-full cursor-pointer">
-                            Login
-                          </h1>
-                        </Button>
+                          Login
+                        </h1>
                       )}
                     </span>
                   </DropdownMenuItem>
                   {isAuthenticated && (
                     <DropdownMenuItem>
                       <span className="w-full">
-                        <Button asChild>
-                          <Link
-                            href="/profile"
-                            className="flex items-center gap-2 w-full cursor-pointer"
-                          >
-                            Profile
-                          </Link>
-                        </Button>
+                        <Link
+                          href="/profile"
+                          className={`flex items-center gap-2 w-full cursor-pointer ${buttonVariants(
+                            {
+                              variant: "default",
+                            }
+                          )}`}
+                        >
+                          Profile
+                        </Link>
                       </span>
                     </DropdownMenuItem>
                   )}
