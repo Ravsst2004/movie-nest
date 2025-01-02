@@ -1,6 +1,5 @@
 "use client";
 
-import { useMemo } from "react";
 import MovieCard from "@/components/movie-card";
 import { useGetMovieGenresQuery, useGetMoviesQuery } from "@/services/tmdb-api";
 import { MovieResultType } from "@/types/movies";
@@ -12,7 +11,6 @@ import {
   PaginationItem,
   PaginationLink,
 } from "@/components/ui/pagination";
-import { motion } from "motion/react";
 import { setPage, setSearch } from "@/lib/features/slice/movie-slice";
 import { Input } from "@/components/ui/input";
 import Loading from "./loading";
@@ -39,33 +37,23 @@ const HomePage = () => {
     }, 400);
   };
 
-  const ListTitle = useMemo(() => {
-    if (!movies || !genreId) return category.split("_").join(" ") || "POPULAR";
-    return genres?.genres?.find((genre: GenreType) => genre.id === genreId)
-      ?.name;
-  }, [movies, genreId, category, genres?.genres]);
+  const ListTitle =
+    genres?.genres?.find((genre: GenreType) => genre.id === genreId)?.name ??
+    category.split("_").join(" ") ??
+    "POPULAR";
 
-  const movieItems = useMemo(() => {
-    if (!movies) return <h1>No Movies Found</h1>;
-
-    return movies.results.map((movie: MovieResultType, index: number) => {
-      return (
-        <motion.div
-          initial={{ opacity: 0, scale: 0.3 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.3, delay: 0.02 * index }}
-          key={movie.id}
-          className="overflow-hidden rounded-lg shadow-md"
-        >
-          <MovieCard
-            image={`https://image.tmdb.org/t/p/w500/${movie.poster_path}`}
-            title={movie.title}
-            id={movie.id}
-          />
-        </motion.div>
-      );
-    });
-  }, [movies]);
+  const movieItems = movies ? (
+    movies.results.map((movie: MovieResultType, index: number) => (
+      <MovieCard
+        key={index}
+        image={`https://image.tmdb.org/t/p/w500/${movie.poster_path}`}
+        title={movie.title}
+        id={movie.id}
+      />
+    ))
+  ) : (
+    <h1>No Movies Found</h1>
+  );
 
   if (isLoading) return <Loading />;
 
@@ -77,20 +65,20 @@ const HomePage = () => {
         <div className="flex flex-wrap justify-between items-center">
           <h1
             id={`${ListTitle}`}
-            className="uppercase text-3xl font-bold"
+            className="uppercase text-lg md:text-3xl font-bold"
           >
             {ListTitle}
           </h1>
           <Input
             type="search"
             placeholder="Search Movie"
-            className="w-80"
+            className="w-64 md:w-80"
             onChange={(e) => handleSearch(e)}
           />
         </div>
         <div
           id="movie-list"
-          className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 2xl:grid-cols-8 gap-6 "
+          className="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-6 2xl:grid-cols-8 gap-6 "
         >
           {movieItems}
         </div>

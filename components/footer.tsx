@@ -92,7 +92,7 @@ const Footer = () => {
           </div>
         </div>
 
-        <div className="mt-12 border-t border-gray-700 pt-4 text-center text-gray-900 dark:text-white">
+        <div className="text-sm mt-12 border-t border-gray-700 pt-4 text-center text-gray-900 dark:text-white">
           <p>
             &copy; {new Date().getFullYear()} Movie Nest . All rights reserved.
           </p>

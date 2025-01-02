@@ -1,6 +1,5 @@
 import Image from "next/image";
 import Link from "next/link";
-import { createSlug } from "@/lib/utils/create-slug";
 
 type MovieCardProps = {
   image: string;
@@ -9,29 +8,24 @@ type MovieCardProps = {
 };
 
 const MovieCard = ({ image, title, id }: MovieCardProps) => {
-  const slug = `${createSlug(title).toLowerCase()}-${id}`;
+  const slug = `${title.toLowerCase().replace(/\s+/g, "-")}-${id}`;
 
   return (
     <Link
       href={`/movie/${slug}`}
       passHref
-      className="flex flex-col justify-center items-center"
     >
-      <div className="relative w-fit">
+      <div className="flex flex-col items-center">
         <Image
           src={image}
-          alt={`Poster of ${title}`}
+          alt={title}
           width={300}
           height={450}
-          loading="lazy"
           className="object-cover rounded-lg"
-          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 300px"
+          loading="lazy"
         />
+        <h1 className="text-center font-semibold">{title}</h1>
       </div>
-
-      <h1 className="text-center font-semibold pt-2 z-10 relative p-2">
-        {title}
-      </h1>
     </Link>
   );
 };
